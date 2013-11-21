@@ -29,7 +29,7 @@ describe Setup do
 
 			it "returns the correct player" do
 			  capture_stdout do
-			  	Setup.determine_first_player.should == :player1
+			  	Setup.determine_first_player.should == :user
 			  end
 			end
 		end
