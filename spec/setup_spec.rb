@@ -16,7 +16,6 @@ describe Setup do
 		end
 
 		describe "when user responds with 1" do
-
 			before do
 				Setup.stub(:accept_input).and_return('1')
 			end
@@ -27,6 +26,21 @@ describe Setup do
 				  actual.should be_a Symbol
 			  end
 			end
+
+			it "returns the correct player" do
+			  capture_stdout do
+			  	Setup.determine_first_player.should == :player1
+			  end
+			end
+		end
+	end
+
+	describe '.determine_opponent_type' do
+		it "asks user if they'd like to play against another human or CPU" do
+		  Setup.stub(:accept_input).and_return('1')
+
+		  output = capture_stdout { Setup.determine_opponent_type }
+		  output.should == "would you like to play against a friend, or the computer?\npress 1 for human and 2 for computer.\n"
 		end
 	end
 end

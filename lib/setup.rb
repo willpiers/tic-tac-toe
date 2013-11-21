@@ -1,6 +1,13 @@
 module Setup
 	def self.determine_opponent_type
+		puts "would you like to play against a friend, or the computer?"
 
+		answer = nil
+		until ['1','2'].include? answer
+			puts "press 1 for human and 2 for computer."
+			answer = accept_input
+		end
+		answer == '1' ? :human : :computer
 	end
 
 	def self.determine_first_player
@@ -13,6 +20,8 @@ module Setup
 		end
 		answer == '1' ? :player1 : :player2
 	end
+
+	private
 
 	def self.accept_input
 		gets.chomp

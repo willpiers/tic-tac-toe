@@ -1,18 +1,14 @@
 require './lib/game'
 require_relative './lib/setup'
 
-puts "would you like to play against a computer or another human?"
-puts "1 for human, 2 for computer"
+opponent = Setup.determine_opponent_type
+first_player = Setup.determine_first_player
 
-answer = nil
-loop do
-	answer = gets.chomp.to_i
-	break if [1,2].include? answer
-	puts "1 for human, 2 for computer"
-end
+game = Game.new({
+		opponent_type: opponent,
+		who_goes_first: first_player
+	})
 
-if answer == 1
-	game = Game.new(opponent_type: :human, who_goes_first: :player)
-else
-	puts "computer"
+until game.is_over?
+	game.play_a_round
 end
