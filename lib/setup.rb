@@ -32,7 +32,7 @@ module Setup
 		end
 	end
 
-	def draw_board board
+	def self.draw_board board
 		system 'clear'
 		puts "     |     |      "
 		puts "  #{ board[0][0] }  |  #{ board[0][1] }  |  #{ board[0][2] }"
@@ -43,6 +43,11 @@ module Setup
 		puts "     |     |    "
 		puts "  #{ board[2][0] }  |  #{ board[2][1] }  |  #{ board[2][2] }"
 		puts "     |     |    "
+	end
+
+	def self.congratulate_winner game
+		winner = game.check_all_lines('X') ? 'X' : 'O'
+		puts "good job #{winner}'s"
 	end
 
 	private

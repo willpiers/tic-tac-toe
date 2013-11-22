@@ -5,7 +5,7 @@ include Setup
 
 class Game
 	attr_accessor :board_matrix, :winner
-	attr_reader :who_goes_first, :opponent_type
+	attr_reader :who_goes_first, :opponent_type, :next_player
 
 	def initialize options={}
 		@board_matrix = [[1,2,3],[4,5,6],[7,8,9]]
@@ -23,6 +23,7 @@ class Game
 			@player1 = who_goes_first == :user ? HumanPlayer.new(self, 'X') : ComputerPlayer.new(self, 'X')
 			@player2 = who_goes_first == :user ? ComputerPlayer.new(self, 'O') : HumanPlayer.new(self, 'O')
 		end
+		@next_player = @player1
 	end
 
 	def play_a_round
@@ -30,6 +31,16 @@ class Game
 		Setup.draw_board @board_matrix
 		@player2.move
 		Setup.draw_board @board_matrix
+	end
+
+	def play_a_turn
+		next_player.move
+		Setup.draw_board @board_matrix
+		toggle_next_player
+	end
+
+	def toggle_next_player
+		@next_player = @next_player == @player1 ? @player2 : @player1
 	end
 
 	def mark_board location, mark
@@ -52,10 +63,11 @@ class Game
 		check_rows(mark) || check_columns(mark) || check_diagonals(mark)
 	end
 
-	def check_columns mark
+	def check_columns mark=nil
 		first = @board_matrix.all? { |row| row.first == mark }
 		second = @board_matrix.all? { |row| row[1] == mark }
 		third = @board_matrix.all? { |row| row.last == mark }
+		first || second || third
 	end
 
 	def check_rows mark
