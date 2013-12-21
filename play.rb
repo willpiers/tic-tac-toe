@@ -5,9 +5,6 @@ include Setup
 opponent = Setup.determine_opponent_type
 first_player = Setup.determine_first_player
 
-puts opponent.inspect
-puts first_player.inspect
-
 game = Game.new({
 		opponent_type: opponent,
 		who_goes_first: first_player
