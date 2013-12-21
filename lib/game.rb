@@ -26,13 +26,6 @@ class Game
 		@next_player = @player1
 	end
 
-	def play_a_round
-		@player1.move
-		Setup.draw_board @board_matrix
-		@player2.move
-		Setup.draw_board @board_matrix
-	end
-
 	def play_a_turn
 		next_player.move
 		Setup.draw_board @board_matrix
@@ -50,7 +43,7 @@ class Game
 	def is_over?
 		winner = 'X' if check_all_lines('X')
 		winner = 'O' if check_all_lines('O')
-		all_squares_marked? || winner != nil
+		all_squares_marked? || !!winner
 	end
 
 	def all_squares_marked?
@@ -60,25 +53,39 @@ class Game
 	end
 
 	def check_all_lines mark
-		check_rows(mark) || check_columns(mark) || check_diagonals(mark)
-	end
-
-	def check_columns mark=nil
-		first = @board_matrix.all? { |row| row.first == mark }
-		second = @board_matrix.all? { |row| row[1] == mark }
-		third = @board_matrix.all? { |row| row.last == mark }
-		first || second || third
-	end
-
-	def check_rows mark
-		@board_matrix.any? do |row|
-			row.all? { |entry| entry == mark }
+		get_rows_columns_and_diagonals.any? do |line|
+			line.all? { |entry| entry == mark }
 		end
 	end
 
-	def check_diagonals mark
-		left_to_right = [0,1,2].all? { |index| @board_matrix[index][index] == mark }
-		right_to_left = [0,1,2].all? { |index| @board_matrix[index][2-index] == mark }
-		left_to_right || right_to_left
+	def get_rows_columns_and_diagonals
+		[get_rows, get_columns, get_diagonals].flatten(1)
+	end
+
+	def get_rows
+		board_matrix
+	end
+
+	def get_columns
+		first = board_matrix.map { |row| row.first }
+		second = board_matrix.map { |row| row[1] }
+		third = board_matrix.map { |row| row.last }
+		[first, second, third]
+	end
+
+	def get_diagonals
+		left_to_right = [board_matrix[0][0], board_matrix[1][1], board_matrix[2][2]]
+		right_to_left = [board_matrix[0][2], board_matrix[1][1], board_matrix[2][0]]
+		[left_to_right, right_to_left]
+	end
+
+	def available_spaces
+		spaces = []
+		board_matrix.each do |row|
+			row.each do |entry|
+				spaces << entry if entry.is_a? Integer
+			end
+		end
+		spaces
 	end
 end
