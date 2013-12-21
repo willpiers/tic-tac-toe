@@ -21,9 +21,9 @@ module Setup
 		answer == '1' ? :user : :other
 	end
 
-	def self.determine_move player
+	def self.determine_move mark
 		puts "Pick an open square to move"
-		puts "You're #{player.mark}'s, in case you forgot"
+		puts "You're #{mark}'s, in case you forgot"
 
 		loop do
 			mark_location = translate(gets.chomp)
@@ -50,6 +50,13 @@ module Setup
 		puts "good job #{winner}'s"
 	end
 
+	def translate mark_location
+		return nil unless mark_location
+		row = (mark_location.to_f/3.0).ceil - 1
+		column = (mark_location.to_i - 1) % 3
+		{row: row, column: column}
+	end
+
 	private
 
 	def self.accept_input
@@ -59,11 +66,5 @@ module Setup
 	def valid_input? location
 		true
 		# TODO this should be based on the current game's board!
-	end
-
-	def translate mark_location
-		row = (mark_location.to_f/3.0).ceil - 1
-		column = (mark_location.to_i - 1) % 3
-		{row: row, column: column}
 	end
 end
