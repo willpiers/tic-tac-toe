@@ -8,8 +8,8 @@ class ComputerPlayer
 		:win,
 		:block,
 		:make_fork,
-		# :block_fork_indirectly,
-		# :block_fork_directly,
+		:block_fork_indirectly,
+		:block_fork_directly,
 		:center,
 		:opposite_corner,
 		:empty_corner,
@@ -65,6 +65,59 @@ class ComputerPlayer
 			intersection = intersection_info[:space]
 
 			if first.include?(mark) && !first.include?(opposing_mark) && second.include?(mark) && !second.include?(opposing_mark)
+				if game.available_spaces.include?(intersection)
+					return Setup.translate(intersection)
+				end
+			end
+		end
+		nil
+	end
+
+	def forks
+		all_forks = []
+		game.intersecting_lines.each do |intersection_info|
+			first = intersection_info[:first]
+			second = intersection_info[:second]
+			intersection = intersection_info[:space]
+
+			if first.include?(mark) && !first.include?(opposing_mark) && second.include?(mark) && !second.include?(opposing_mark)
+				if game.available_spaces.include?(intersection)
+					all_forks << Setup.translate(intersection)
+				end
+			end
+		end
+		all_forks
+	end
+
+	def block_fork_indirectly
+		game.get_rows_columns_and_diagonals.each do |line|
+			if line.include?(mark) && !line.include?(opposing_mark)
+				possible_choices = line & game.available_spaces
+				possible_choices.each do |space_number|
+					temp_game = Game.new
+					fake_opponent = ComputerPlayer.new(temp_game, opposing_mark)
+
+					new_board_matrix = Marshal.load(Marshal.dump(game.board_matrix))
+
+					temp_game.board_matrix = new_board_matrix
+					temp_game.mark_board Setup.translate(space_number), mark
+
+					unless fake_opponent.forks.any? { |fork| fork == fake_opponent.block }
+						return Setup.translate(space_number)
+					end
+				end
+			end
+		end
+		nil
+	end
+
+	def block_fork_directly
+		game.intersecting_lines.each do |intersection_info|
+			first = intersection_info[:first]
+			second = intersection_info[:second]
+			intersection = intersection_info[:space]
+
+			if first.include?(opposing_mark) && !first.include?(mark) && second.include?(opposing_mark) && !second.include?(mark)
 				if game.available_spaces.include?(intersection)
 					return Setup.translate(intersection)
 				end
