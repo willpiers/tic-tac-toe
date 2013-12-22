@@ -15,6 +15,32 @@ describe ComputerPlayer do
 	end
 
 	describe '#move' do
+		boards = [
+			[['O',2,3],['O',5,6],[7,8,9]],
+			[[1,'O',3],[4,'O',6],[7,8,9]],
+			[[1,2,'O'],[4,5,'O'],[7,8,9]],
+			[[1,2,3],['O',5,6],['O',8,9]],
+			[[1,2,3],[4,'O',6],[7,'O',9]],
+			[[1,2,3],[4,5,'O'],[7,8,'O']],
+			[['O',2,3],[4,5,6],['O',8,9]],
+			[[1,'O',3],[4,5,6],[7,'O',9]],
+			[[1,2,'O'],[4,5,6],[7,8,'O']],
+			[[1,'O','O'],[4,5,6],[7,8,9]],
+			[['O','O',3],[4,5,6],[7,8,9]],
+			[['O',2,'O'],[4,5,6],[7,8,9]],
+			[[1,2,3],[4,'O','O'],[7,8,9]],
+			[[1,2,3],['O','O',6],[7,8,9]],
+			[[1,2,3],['O',5,'O'],[7,8,9]],
+			[[1,2,3],[4,5,6],[7,'O','O']],
+			[[1,2,3],[4,5,6],['O','O',9]],
+			[[1,2,3],[4,5,6],['O',8,'O']],
+			[['O',2,3],[4,'O',6],[7,8,9]],
+			[['O',2,3],[4,5,6],[7,8,'O']],
+			[[1,2,3],[4,'O',6],[7,8,'O']],
+			[[1,2,'O'],[4,'O',6],[7,8,9]],
+			[[1,2,'O'],[4,5,6],['O',8,9]],
+			[[1,2,3],[4,'O',6],['O',8,9]]
+		]
 		context 'when they have a chance to win' do
 			# only boards which are one move away from ending
 			boards = [
@@ -85,7 +111,7 @@ describe ComputerPlayer do
 			]
 
 			boards.each do |board|
-				it "should block the win" do
+				it "blocks the win" do
 				  @game = Game.new
 				  @game.board_matrix = board
 				  @computer_player = ComputerPlayer.new(@game, 'X')
@@ -96,6 +122,28 @@ describe ComputerPlayer do
 					@game.is_over?.should be_false
 				end
 			end
+		end
+
+		context "when there is a chance to make a fork" do
+		  boards = [
+		  	[['O','X','O'],[4,5,6],[7,8,9]],
+		  	[[1,2,3],[4,5,6],['O','X','O']],
+		  	[[1,2,'O'],[4,'X',6],['O',8,'X']]
+		  ]
+
+		  boards.each do |board|
+		  	it "makes a fork" do
+		  	  @game = Game.new
+		  	  @game.board_matrix = board
+		  	  @computer_player = ComputerPlayer.new(@game, 'O')
+		  	  @opponent = ComputerPlayer.new(@game, 'X')
+
+		  	  @computer_player.move
+		  	  @opponent.move
+		  	  @computer_player.move
+		  	  @game.is_over?.should be_true
+		  	end
+		  end
 		end
 	end
 end

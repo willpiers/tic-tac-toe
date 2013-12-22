@@ -4,10 +4,10 @@ module Setup
 
 		answer = nil
 		until ['1','2'].include? answer
-			puts "press 1 for human and 2 for computer."
+			puts "press 1 for computer and 2 for human."
 			answer = accept_input
 		end
-		answer == '1' ? :human : :computer
+		answer == '1' ? :computer : :human
 	end
 
 	def self.determine_first_player
@@ -46,8 +46,10 @@ module Setup
 	end
 
 	def self.congratulate_winner game
-		winner = game.check_all_lines('X') ? 'X' : 'O'
-		puts "good job #{winner}'s"
+		winner = 'X' if game.check_all_lines('X')
+		winner = 'O' if game.check_all_lines('O')
+		message = winner ? "Good job #{winner}'s" : "Cat's game!"
+		puts message
 	end
 
 	def translate mark_location

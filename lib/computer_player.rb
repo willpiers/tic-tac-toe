@@ -7,8 +7,8 @@ class ComputerPlayer
 	ACTIONS = [
 		:win,
 		:block,
-		:random_move,
 		:make_fork,
+		:random_move,
 		:block_fork,
 		:center,
 		:opposite_corner,
@@ -51,8 +51,23 @@ class ComputerPlayer
 		nil
 	end
 
+	def make_fork
+		game.intersecting_lines.each do |intersection_info|
+			first = intersection_info[:first]
+			second = intersection_info[:second]
+			intersection = intersection_info[:space]
+
+			if first.include?(mark) && !first.include?(opposing_mark) && second.include?(mark) && !second.include?(opposing_mark)
+				if game.available_spaces.include?(intersection)
+					return Setup.translate(intersection)
+				end
+			end
+		end
+		nil
+	end
+
 	def random_move
 		space_number = game.available_spaces.sample
-		Set.translate(space_number)
+		Setup.translate(space_number)
 	end
 end

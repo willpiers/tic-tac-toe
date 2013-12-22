@@ -37,7 +37,7 @@ class Game
 	end
 
 	def mark_board location, mark
-		@board_matrix[location[:row]][location[:column]] = mark
+		board_matrix[location[:row]][location[:column]] = mark
 	end
 
 	def is_over?
@@ -47,7 +47,7 @@ class Game
 	end
 
 	def all_squares_marked?
-		@board_matrix.all? do |row|
+		board_matrix.all? do |row|
 			row.all? { |entry| entry == 'X' || entry == 'O' }
 		end
 	end
@@ -58,19 +58,18 @@ class Game
 		end
 	end
 
-	def get_rows_columns_and_diagonals
-		[get_rows, get_columns, get_diagonals].flatten(1)
+	def get_rows_columns_and_diagonals; [get_rows, get_columns, get_diagonals].flatten(1); end
+	def get_rows; board_matrix;end
+	def get_columns; [column(0),column(1),column(2)]; end
+
+	def row row_number
+		raise(ArgumentError, 'Invalid column number given') if row_number > 2 or row_number < 0
+		board_matrix[row_number]
 	end
 
-	def get_rows
-		board_matrix
-	end
-
-	def get_columns
-		first = board_matrix.map { |row| row.first }
-		second = board_matrix.map { |row| row[1] }
-		third = board_matrix.map { |row| row.last }
-		[first, second, third]
+	def column col_number
+		raise(ArgumentError, 'Invalid column number given') if col_number > 2 or col_number < 0
+		board_matrix.map { |row| row[col_number] }
 	end
 
 	def get_diagonals
@@ -87,5 +86,20 @@ class Game
 			end
 		end
 		spaces
+	end
+
+	def intersecting_lines
+		[
+			{first: row(0), second: column(0), space: 1},
+			{first: row(0), second: column(1), space: 2},
+			{first: row(0), second: column(2), space: 3},
+			{first: row(1), second: column(0), space: 4},
+			{first: row(1), second: column(1), space: 5},
+			{first: row(1), second: column(2), space: 6},
+			{first: row(2), second: column(0), space: 7},
+			{first: row(2), second: column(1), space: 8},
+			{first: row(2), second: column(2), space: 9},
+			{first: get_diagonals.first, second: get_diagonals.last, space: 5},
+		]
 	end
 end

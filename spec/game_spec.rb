@@ -28,4 +28,11 @@ describe Game do
 			@game.is_over?.should be_true
 		end
 	end
+
+	describe '#available_spaces' do
+		it "returns an array of space numbers" do
+		  @game.board_matrix = [[1,2,'O'],['X',5,'O'],['X',8,9]]
+		  expect(@game.available_spaces).to eq [1,2,5,8,9]
+		end
+	end
 end

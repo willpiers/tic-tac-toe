@@ -40,7 +40,7 @@ describe Setup do
 		  Setup.stub(:accept_input).and_return('1')
 
 		  output = capture_stdout { Setup.determine_opponent_type }
-		  output.should == "would you like to play against a friend, or the computer?\npress 1 for human and 2 for computer.\n"
+		  output.should == "would you like to play against a friend, or the computer?\npress 1 for computer and 2 for human.\n"
 		end
 	end
 end
