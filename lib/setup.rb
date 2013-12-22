@@ -1,3 +1,5 @@
+require 'colorize'
+
 module Setup
 	def self.determine_opponent_type
 		puts "would you like to play against a friend, or the computer?"
@@ -33,16 +35,33 @@ module Setup
 	end
 
 	def self.draw_board board
+		colors = color_board(board)
 		system 'clear'
 		puts "     |     |      "
-		puts "  #{ board[0][0] }  |  #{ board[0][1] }  |  #{ board[0][2] }"
+		puts "  #{ colors[0] }  |  #{ colors[1] }  |  #{ colors[2] }"
 		puts "_____|_____|_____"
 		puts "     |     |    "
-		puts "  #{ board[1][0] }  |  #{ board[1][1] }  |  #{ board[1][2] }"
+		puts "  #{ colors[3] }  |  #{ colors[4] }  |  #{ colors[5] }"
 		puts "_____|_____|_____"
 		puts "     |     |    "
-		puts "  #{ board[2][0] }  |  #{ board[2][1] }  |  #{ board[2][2] }"
+		puts "  #{ colors[6] }  |  #{ colors[7] }  |  #{ colors[8] }"
 		puts "     |     |    "
+	end
+
+	def self.color_board board
+		colored_spaces = []
+		board.each do |row|
+			row.each do |entry|
+				if entry.is_a? Integer
+					colored_spaces << entry.to_s.colorize(:green)
+				elsif entry == 'X'
+					colored_spaces << entry.colorize(:blue)
+				elsif entry == 'O'
+					colored_spaces << entry.colorize(:red)
+				end
+			end
+		end
+		colored_spaces
 	end
 
 	def self.congratulate_winner game
