@@ -8,12 +8,12 @@ class ComputerPlayer
 		:win,
 		:block,
 		:make_fork,
-		:random_move,
-		:block_fork,
+		# :block_fork_indirectly,
+		# :block_fork_directly,
 		:center,
 		:opposite_corner,
 		:empty_corner,
-		:empty_side
+		:empty_side,
 	]
 
 	def initialize game, mark
@@ -23,12 +23,19 @@ class ComputerPlayer
 	end
 
 	def move
+		game.mark_board determine_move, mark
+	end
+
+	def determine_move
 		chosen_move = nil
-		ACTIONS.each do |action_title|
-			break if chosen_move
+		ACTIONS.each_with_index do |action_title, i|
 			chosen_move = self.send(action_title)
+			if chosen_move
+				puts "chosen strategy  ::  #{ACTIONS[i].to_s}\n"
+				break
+			end
 		end
-		game.mark_board chosen_move, mark
+		chosen_move
 	end
 
 	def win
@@ -66,8 +73,38 @@ class ComputerPlayer
 		nil
 	end
 
-	def random_move
-		space_number = game.available_spaces.sample
-		Setup.translate(space_number)
+	def center
+		game.available_spaces.include?(5) ? Setup.translate(5) : nil
+	end
+
+	def empty_corner
+		game.corners.each do |corner_space|
+			if game.available_spaces.include?(corner_space)
+				return Setup.translate(corner_space)
+			end
+		end
+		nil
+	end
+
+	def empty_side
+		game.edges.each do |side_space|
+			if game.available_spaces.include?(side_space)
+				return Setup.translate(side_space)
+			end
+		end
+		nil
+	end
+
+	def opposite_corner
+		if game.board_matrix[0][0] == opposing_mark && game.available_spaces.include?(9)
+			return Setup.translate(9)
+		elsif game.board_matrix[0][2] == opposing_mark && game.available_spaces.include?(7)
+			return Setup.translate(7)
+		elsif game.board_matrix[2][0] == opposing_mark && game.available_spaces.include?(3)
+			return Setup.translate(3)
+		elsif game.board_matrix[2][2] == opposing_mark && game.available_spaces.include?(1)
+			return Setup.translate(1)
+		end
+		nil
 	end
 end

@@ -72,6 +72,14 @@ class Game
 		board_matrix.map { |row| row[col_number] }
 	end
 
+	def corners
+		[board_matrix[0][0], board_matrix[0][2], board_matrix[2][0], board_matrix[2][2]]
+	end
+
+	def edges
+		[board_matrix[0][1], board_matrix[1][0], board_matrix[1][2], board_matrix[2][1]]
+	end
+
 	def get_diagonals
 		left_to_right = [board_matrix[0][0], board_matrix[1][1], board_matrix[2][2]]
 		right_to_left = [board_matrix[0][2], board_matrix[1][1], board_matrix[2][0]]
@@ -100,6 +108,18 @@ class Game
 			{first: row(2), second: column(1), space: 8},
 			{first: row(2), second: column(2), space: 9},
 			{first: get_diagonals.first, second: get_diagonals.last, space: 5},
+			{first: row(0), second: get_diagonals.first, space: 1},
+			{first: row(1), second: get_diagonals.first, space: 5},
+			{first: row(2), second: get_diagonals.first, space: 9},
+			{first: column(0), second: get_diagonals.first, space: 1},
+			{first: column(1), second: get_diagonals.first, space: 5},
+			{first: column(2), second: get_diagonals.first, space: 9},
+			{first: row(0), second: get_diagonals.last, space: 3},
+			{first: row(1), second: get_diagonals.last, space: 5},
+			{first: row(2), second: get_diagonals.last, space: 7},
+			{first: column(0), second: get_diagonals.last, space: 7},
+			{first: column(1), second: get_diagonals.last, space: 5},
+			{first: column(2), second: get_diagonals.last, space: 3}
 		]
 	end
 end
