@@ -30,9 +30,25 @@ describe Game do
 	end
 
 	describe '#available_spaces' do
-		it "returns an array of space numbers" do
-		  @game.board_matrix = [[1,2,'O'],['X',5,'O'],['X',8,9]]
-		  expect(@game.available_spaces).to eq [1,2,5,8,9]
+		context "when no moves have been made" do
+			it "returns a flat array with all board spaces" do
+			  @game.board_matrix = [[1,2,3],[4,5,6],[7,8,9]]
+			  expect(@game.available_spaces).to eq [1,2,3,4,5,6,7,8,9]
+			end
+		end
+
+		context "when some moves have been made" do
+		  it "returns an array of space numbers" do
+		    @game.board_matrix = [[1,2,'O'],['X',5,'O'],['X',8,9]]
+		    expect(@game.available_spaces).to eq [1,2,5,8,9]
+		  end
+		end
+
+		context "when the board is filled" do
+			it "renturns an empty array" do
+			  @game.board_matrix = [['O','X','O'],['X','X','O'],['X','O','X']]
+			  expect(@game.available_spaces).to eq []
+			end
 		end
 	end
 end

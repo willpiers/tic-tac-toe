@@ -43,6 +43,37 @@ describe Setup do
 		  output.should == "would you like to play against a friend, or the computer?\npress 1 for computer and 2 for human.\n"
 		end
 	end
+
+	describe '.valid_input?' do
+		context "when given text instead of an integer" do
+		  it "returns false" do
+		    actual = Setup.valid_input? Game.new, 'hello world'
+		    expect(actual).to be_false
+		  end
+		end
+
+		context "when given a location that is already occupied" do
+		  it "returns false" do
+		    game = Game.new
+		    game.board_matrix = [['X',2,3],[4,5,6],[7,8,9]]
+		    expect(Setup.valid_input?(game, 1)).to be_false
+		  end
+		end
+
+		context "when given an integer <1 or >9" do
+			it "returns false" do
+				expect(Setup.valid_input?(Game.new, 0)).to be_false
+				expect(Setup.valid_input?(Game.new, 50)).to be_false
+			end
+		end
+
+		context "when given an integer >0 and <10" do
+			it "returns true" do
+			  expect(Setup.valid_input?(Game.new, 1)).to be_true
+			  expect(Setup.valid_input?(Game.new, 9)).to be_true
+			end
+		end
+	end
 end
 
 

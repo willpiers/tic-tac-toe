@@ -30,10 +30,7 @@ class ComputerPlayer
 		chosen_move = nil
 		ACTIONS.each_with_index do |action_title, i|
 			chosen_move = self.send(action_title)
-			if chosen_move
-				puts "chosen strategy  ::  #{ACTIONS[i].to_s}\n"
-				break
-			end
+			break if chosen_move
 		end
 		chosen_move
 	end

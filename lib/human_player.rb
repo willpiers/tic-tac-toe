@@ -10,7 +10,7 @@ class	HumanPlayer
 	end
 
 	def move
-		mark_location = Setup.determine_move mark
+		mark_location = Setup.determine_user_move(game, mark)
 		game.mark_board mark_location, mark
 	end
 end

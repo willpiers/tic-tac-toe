@@ -87,13 +87,7 @@ class Game
 	end
 
 	def available_spaces
-		spaces = []
-		board_matrix.each do |row|
-			row.each do |entry|
-				spaces << entry if entry.is_a? Integer
-			end
-		end
-		spaces
+		board_matrix.flatten.select { |entry| entry.is_a? Integer }
 	end
 
 	def intersecting_lines

@@ -2,12 +2,10 @@ require './lib/game'
 require_relative './lib/setup'
 include Setup
 
-opponent = Setup.determine_opponent_type
-first_player = Setup.determine_first_player
 
 game = Game.new({
-		opponent_type: opponent,
-		who_goes_first: first_player
+		opponent_type: Setup.determine_opponent_type,
+		who_goes_first: Setup.determine_first_player
 	})
 
 Setup.draw_board game.board_matrix
