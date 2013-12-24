@@ -54,15 +54,13 @@ module Setup
 
   def self.color_board board
     colored_spaces = []
-    board.each do |row|
-      row.each do |entry|
-        if entry.is_a? Integer
-          colored_spaces << entry.to_s.colorize(:green)
-        elsif entry == 'X'
-          colored_spaces << entry.colorize(:blue)
-        elsif entry == 'O'
-          colored_spaces << entry.colorize(:red)
-        end
+    board.flatten.each do |entry|
+      if entry.is_a? Integer
+        colored_spaces << entry.to_s.colorize(:green)
+      elsif entry == 'X'
+        colored_spaces << entry.colorize(:blue)
+      elsif entry == 'O'
+        colored_spaces << entry.colorize(:red)
       end
     end
     colored_spaces

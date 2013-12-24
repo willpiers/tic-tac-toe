@@ -4,7 +4,7 @@ include Setup
 class ComputerPlayer
   attr_reader :mark, :game, :opposing_mark
 
-  ACTIONS = [
+  STRATEGIES = [
     :win,
     :block,
     :make_fork,
@@ -28,8 +28,8 @@ class ComputerPlayer
 
   def determine_move
     chosen_move = nil
-    ACTIONS.each_with_index do |action_title, i|
-      chosen_move = self.send(action_title)
+    STRATEGIES.each do |strategy|
+      chosen_move = self.send(strategy)
       break if chosen_move
     end
     chosen_move
@@ -136,15 +136,6 @@ class ComputerPlayer
     nil
   end
 
-  def empty_side
-    game.edges.each do |side_space|
-      if game.available_spaces.include?(side_space)
-        return Setup.translate(side_space)
-      end
-    end
-    nil
-  end
-
   def opposite_corner
     if game.board_matrix[0][0] == opposing_mark && game.available_spaces.include?(9)
       return Setup.translate(9)
@@ -154,6 +145,15 @@ class ComputerPlayer
       return Setup.translate(3)
     elsif game.board_matrix[2][2] == opposing_mark && game.available_spaces.include?(1)
       return Setup.translate(1)
+    end
+    nil
+  end
+
+  def empty_side
+    game.edges.each do |side_space|
+      if game.available_spaces.include?(side_space)
+        return Setup.translate(side_space)
+      end
     end
     nil
   end

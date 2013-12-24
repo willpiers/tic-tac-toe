@@ -4,8 +4,8 @@ require_relative './setup'
 include Setup
 
 class Game
-  attr_accessor :board_matrix, :winner
-  attr_reader :who_goes_first, :opponent_type, :next_player
+  attr_accessor :board_matrix
+  attr_reader :who_goes_first, :opponent_type, :next_player, :winner
 
   def initialize options={}
     @board_matrix = [[1,2,3],[4,5,6],[7,8,9]]
@@ -41,9 +41,9 @@ class Game
   end
 
   def is_over?
-    winner = 'X' if check_all_lines('X')
-    winner = 'O' if check_all_lines('O')
-    all_squares_marked? || !!winner
+    @winner = 'X' if check_all_lines('X')
+    @winner = 'O' if check_all_lines('O')
+    all_squares_marked? || !!@winner
   end
 
   def all_squares_marked?
@@ -59,7 +59,7 @@ class Game
   end
 
   def get_rows_columns_and_diagonals; [get_rows, get_columns, get_diagonals].flatten(1); end
-  def get_rows; board_matrix;end
+  def get_rows; board_matrix; end
   def get_columns; [column(0),column(1),column(2)]; end
 
   def row row_number
