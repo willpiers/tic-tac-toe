@@ -128,7 +128,7 @@ class ComputerPlayer
   end
 
   def empty_corner
-    game.corners.each do |corner_space|
+    game.corners.shuffle.each do |corner_space|
       if game.available_spaces.include?(corner_space)
         return Setup.translate(corner_space)
       end
@@ -150,7 +150,7 @@ class ComputerPlayer
   end
 
   def empty_side
-    game.edges.each do |side_space|
+    game.edges.shuffle.each do |side_space|
       if game.available_spaces.include?(side_space)
         return Setup.translate(side_space)
       end

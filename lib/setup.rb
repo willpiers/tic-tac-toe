@@ -53,17 +53,13 @@ module Setup
   end
 
   def self.color_board board
-    colored_spaces = []
-    board.flatten.each do |entry|
-      if entry.is_a? Integer
-        colored_spaces << entry.to_s.colorize(:green)
-      elsif entry == 'X'
-        colored_spaces << entry.colorize(:blue)
-      elsif entry == 'O'
-        colored_spaces << entry.colorize(:red)
+    board.flatten.map do |entry|
+      case entry
+      when 'X' then entry.colorize(:blue)
+      when 'O' then entry.colorize(:red)
+      else entry.to_s.colorize(:green)
       end
     end
-    colored_spaces
   end
 
   def self.congratulate_winner game
