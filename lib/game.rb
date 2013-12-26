@@ -53,12 +53,12 @@ class Game
   end
 
   def check_all_lines mark
-    get_rows_columns_and_diagonals.any? do |line|
+    all_lines.any? do |line|
       line.all? { |entry| entry == mark }
     end
   end
 
-  def get_rows_columns_and_diagonals; [get_rows, get_columns, get_diagonals].flatten(1); end
+  def all_lines; [get_rows, get_columns, get_diagonals].flatten(1); end
   def get_rows; board_matrix; end
   def get_columns; [column(0),column(1),column(2)]; end
 

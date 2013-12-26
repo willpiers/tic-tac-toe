@@ -71,13 +71,13 @@ describe ComputerPlayer do
       ]
       boards.each do |board|
         it "makes a move which results in the win" do
-          @game = Game.new
-          @game.board_matrix = board
-          @computer_player = ComputerPlayer.new(@game, 'O')
+          game = Game.new
+          game.board_matrix = board
+          computer_player = ComputerPlayer.new(game, 'O')
 
-          @game.is_over?.should be_false
-          @computer_player.move
-          @game.is_over?.should be_true
+          game.is_over?.should be_false
+          computer_player.move
+          game.is_over?.should be_true
         end
       end
     end
@@ -112,14 +112,14 @@ describe ComputerPlayer do
 
       boards.each do |board|
         it "blocks the win" do
-          @game = Game.new
-          @game.board_matrix = board
-          @computer_player = ComputerPlayer.new(@game, 'X')
-          @opponent = ComputerPlayer.new(@game, 'O')
+          game = Game.new
+          game.board_matrix = board
+          computer_player = ComputerPlayer.new(game, 'X')
+          opponent = ComputerPlayer.new(game, 'O')
 
-          @computer_player.move
-          @opponent.move
-          @game.is_over?.should be_false
+          computer_player.move
+          opponent.move
+          game.is_over?.should be_false
         end
       end
     end
@@ -133,17 +133,27 @@ describe ComputerPlayer do
 
       boards.each do |board|
         it "makes a fork" do
-          @game = Game.new
-          @game.board_matrix = board
-          @computer_player = ComputerPlayer.new(@game, 'O')
-          @opponent = ComputerPlayer.new(@game, 'X')
+          game = Game.new
+          game.board_matrix = board
+          computer_player = ComputerPlayer.new(game, 'O')
+          opponent = ComputerPlayer.new(game, 'X')
 
-          @computer_player.move
-          @opponent.move
-          @computer_player.move
-          @game.is_over?.should be_true
+          computer_player.move
+          opponent.move
+          computer_player.move
+          game.is_over?.should be_true
         end
       end
+    end
+  end
+
+  describe '#empty_side' do
+    it "returns a move hash when one is available" do
+      game = Game.new
+      computer_player = ComputerPlayer.new(game, 'X')
+      game.board_matrix = [[1,'O',3],['O',5,6],[7,'O',9]]
+
+      expect(computer_player.empty_side).to eq({row: 1, column: 2})
     end
   end
 end
