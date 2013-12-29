@@ -3,14 +3,14 @@ require_relative '../lib/computer_player'
 
 describe ComputerPlayer do
   it "responds to game and mark" do
-    ComputerPlayer.new(Game.new, 'O').should respond_to :mark
-    ComputerPlayer.new(Game.new, 'O').should respond_to :game
+    expect(ComputerPlayer.new(Game.new, 'O')).to respond_to :mark
+    expect(ComputerPlayer.new(Game.new, 'O')).to respond_to :game
   end
 
   describe '#initialize' do
     it "sets the game and mark instance variables" do
-      ComputerPlayer.new(Game.new, 'O').mark.should_not be_nil
-      ComputerPlayer.new(Game.new, 'O').game.should_not be_nil
+      expect(ComputerPlayer.new(Game.new, 'O').mark).to_not be_nil
+      expect(ComputerPlayer.new(Game.new, 'O').game).to_not be_nil
     end
   end
 
@@ -75,9 +75,9 @@ describe ComputerPlayer do
           game.board_matrix = board
           computer_player = ComputerPlayer.new(game, 'O')
 
-          game.is_over?.should be_false
+          expect(game.is_over?).to be_false
           computer_player.move
-          game.is_over?.should be_true
+          expect(game.is_over?).to be_true
         end
       end
     end
@@ -119,7 +119,7 @@ describe ComputerPlayer do
 
           computer_player.move
           opponent.move
-          game.is_over?.should be_false
+          expect(game.is_over?).to be_false
         end
       end
     end
@@ -141,7 +141,7 @@ describe ComputerPlayer do
           computer_player.move
           opponent.move
           computer_player.move
-          game.is_over?.should be_true
+          expect(game.is_over?).to be_true
         end
       end
     end
