@@ -21,7 +21,7 @@ rspec spec
 Installation
 --
 ```
-https://github.com/willpiers/tic-tac-toe.git
+git clone https://github.com/willpiers/tic-tac-toe.git
 cd tic-tac-toe
 bundle install
 ```
