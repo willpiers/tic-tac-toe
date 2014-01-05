@@ -6,26 +6,26 @@ module Setup
 
     answer = nil
     until ['1','2'].include? answer
-      puts "press 1 for computer and 2 for human."
+      puts "press 1 for computer, and 2 for human."
       answer = accept_input
     end
     answer == '1' ? :computer : :human
   end
 
   def self.determine_first_player
-    puts "who should go first."
+    puts "who should go first?"
 
     answer = nil
     until ['1','2'].include? answer
-      puts "press 1 for you and 2 for other player."
+      puts "press 1 for you, and 2 for the other player."
       answer = accept_input
     end
     answer == '1' ? :user : :other
   end
 
   def self.determine_user_move game, mark
-    puts "Pick an open square to move"
-    puts "You're #{mark}'s, in case you forgot"
+    puts "Pick an open square to move."
+    puts "You're #{mark}'s, in case you forgot."
 
     loop do
       raw_location = gets.chomp.to_i
@@ -33,7 +33,7 @@ module Setup
         mark_location = translate(raw_location)
         return mark_location
       else
-        puts "Please choose an available space on the board"
+        puts "Please choose an available space on the board."
       end
     end
   end

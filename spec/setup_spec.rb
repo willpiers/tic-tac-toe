@@ -12,7 +12,7 @@ describe Setup do
       Setup.stub(:accept_input).and_return('1')
 
       output = capture_stdout { Setup.determine_first_player }
-      expect(output).to eq "who should go first.\npress 1 for you and 2 for other player.\n"
+      expect(output).to eq "who should go first?\npress 1 for you, and 2 for the other player.\n"
     end
 
     describe "when user responds with 1" do
@@ -40,7 +40,14 @@ describe Setup do
       Setup.stub(:accept_input).and_return('1')
 
       output = capture_stdout { Setup.determine_opponent_type }
-      expect(output).to eq "would you like to play against a friend, or the computer?\npress 1 for computer and 2 for human.\n"
+      expect(output).to eq "would you like to play against a friend, or the computer?\npress 1 for computer, and 2 for human.\n"
+    end
+  end
+
+  describe '.translate' do
+    it "translates an integer into a hash with a row and column" do
+      expected = {row: 1, column: 2}
+      expect(Setup.translate(6)).to eq expected
     end
   end
 
