@@ -7,7 +7,7 @@ Requirements
 --
   - The game was built with ruby 2.0.0
   - Should work fine with any version >= 1.9
-  - You'll need a command line interface equivalent to temrinal on Mac OS X
+  - You'll need a command line interface equivalent to terminal on Mac OS X
   
 Tests
 --
