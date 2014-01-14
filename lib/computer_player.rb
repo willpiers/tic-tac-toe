@@ -19,7 +19,7 @@ class ComputerPlayer
   def initialize game, mark
     @mark = mark
     @game = game
-    @opposing_mark = (mark == 'X' ? 'O' : 'X')
+    @opposing_mark = other_mark(mark)
   end
 
   def move
@@ -33,43 +33,28 @@ class ComputerPlayer
     end
   end
 
-  def win
-    winning_line = game.all_lines.find { |line| line.uniq.count == 2 && !line.include?(opposing_mark) } || []
-    move = winning_line.find { |entry| entry.is_a? Integer }
+  def other_mark mark
+    mark == 'X' ? 'O' : 'X'
+  end
+
+  def win; complete_line(mark); end
+  def block; complete_line(opposing_mark); end
+
+  def complete_line opposing_mark
+    close_line = game.all_lines.find { |line| line.uniq.count == 2 && !line.include?(other_mark(opposing_mark)) } || []
+    move = close_line.find { |entry| entry.is_a? Integer }
     Setup.translate(move)
   end
 
-  def block
-    losing_line = game.all_lines.find { |line| line.uniq.count == 2 && !line.include?(mark) } || []
-    move = losing_line.find { |entry| entry.is_a? Integer }
-    Setup.translate(move)
-  end
-
-  def make_fork
-    game.intersecting_lines.each do |intersection_info|
-      first = intersection_info[:first]
-      second = intersection_info[:second]
-      intersection = intersection_info[:space]
-
-      if first.include?(mark) && !first.include?(opposing_mark) && second.include?(mark) && !second.include?(opposing_mark)
-        if game.available_spaces.include?(intersection)
-          return Setup.translate(intersection)
-        end
-      end
-    end
-    nil
-  end
+  def make_fork; forks.sample; end
 
   def forks
     all_forks = []
-    game.intersecting_lines.each do |intersection_info|
-      first = intersection_info[:first]
-      second = intersection_info[:second]
-      intersection = intersection_info[:space]
-
-      if (first & second).include?(mark) && !(first | second).include?(opposing_mark)
-        if game.available_spaces.include?(intersection)
-          all_forks << Setup.translate(intersection)
+    game.intersecting_lines.each do |intersection|
+      cell = intersection[:space]
+      if fork_possible(intersection, mark)
+        if game.available_spaces.include?(cell)
+          all_forks << Setup.translate(cell)
         end
       end
     end
@@ -97,43 +82,42 @@ class ComputerPlayer
   end
 
   def block_fork_directly
-    game.intersecting_lines.each do |intersection_info|
-      first = intersection_info[:first]
-      second = intersection_info[:second]
-      intersection = intersection_info[:space]
-
-      if (first & second).include?(opposing_mark) && !(first | second).include?(mark)
-        if game.available_spaces.include?(intersection)
-          return Setup.translate(intersection)
+    game.intersecting_lines.each do |intersection|
+      if fork_possible(intersection, opposing_mark)
+        if game.available_spaces.include?(intersection[:space])
+          return Setup.translate(intersection[:space])
         end
       end
     end
     nil
   end
 
+  def fork_possible intersection, mark
+    (intersection[:first] & intersection[:second]).include?(mark) &&
+      !(intersection[:first] | intersection[:second]).include?(other_mark(mark))
+  end
+
   def center
     game.available_spaces.include?(5) ? Setup.translate(5) : nil
   end
 
-  def empty_corner
-    corner = game.corners.shuffle.find { |corner_space| game.available_spaces.include?(corner_space) }
-    Setup.translate(corner)
-  end
-
   def opposite_corner
-    if game.board_matrix[0][0] == opposing_mark && game.available_spaces.include?(9)
+    if game.corners[0] == opposing_mark && game.available_spaces.include?(9)
       Setup.translate(9)
-    elsif game.board_matrix[0][2] == opposing_mark && game.available_spaces.include?(7)
+    elsif game.corners[1] == opposing_mark && game.available_spaces.include?(7)
       Setup.translate(7)
-    elsif game.board_matrix[2][0] == opposing_mark && game.available_spaces.include?(3)
+    elsif game.corners[2] == opposing_mark && game.available_spaces.include?(3)
       Setup.translate(3)
-    elsif game.board_matrix[2][2] == opposing_mark && game.available_spaces.include?(1)
+    elsif game.corners[3] == opposing_mark && game.available_spaces.include?(1)
       Setup.translate(1)
     end
   end
 
-  def empty_side
-    edge = game.edges.shuffle.find { |side_space| game.available_spaces.include?(side_space) }
-    Setup.translate(edge)
+  def empty_side; empty_space(:edges); end
+  def empty_corner; empty_space(:corners); end
+
+  def empty_space type
+    space = game.send(type).shuffle.find { |cell| game.available_spaces.include?(cell) }
+    Setup.translate space
   end
 end
