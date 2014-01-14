@@ -43,7 +43,11 @@ class Game
   def is_over?
     @winner = 'X' if check_all_lines('X')
     @winner = 'O' if check_all_lines('O')
-    all_squares_marked? || !!@winner
+    all_squares_marked? || !!@winner || impossible_to_win?
+  end
+
+  def impossible_to_win?
+    all_lines.all? { |line| line.include?('X') && line.include?('O') }
   end
 
   def all_squares_marked?
