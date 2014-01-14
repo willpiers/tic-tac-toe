@@ -84,7 +84,7 @@ class ComputerPlayer
           fake_game = Game.new
           fake_opponent = ComputerPlayer.new(fake_game, opposing_mark)
 
-          fake_game.board_matrix = game.board_matrix.dup
+          fake_game.board_matrix = Marshal.load( Marshal.dump( game.board_matrix ) )
           fake_game.mark_board Setup.translate(space_number), mark
 
           unless fake_opponent.forks.any? { |fork| fork == fake_opponent.block }
