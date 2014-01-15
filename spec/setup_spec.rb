@@ -1,7 +1,4 @@
-require_relative './spec_helper'
-require_relative '../lib/setup'
-require_relative '../lib/board'
-include Setup
+require 'spec_helper'
 
 describe Setup do
   it "has methods for ascertaining opponent type and who goes first" do

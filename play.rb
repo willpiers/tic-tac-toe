@@ -1,6 +1,8 @@
-require './lib/game'
 require './lib/setup'
+require './lib/game'
 require './lib/board'
+require './lib/human_player'
+require './lib/computer_player'
 include Setup
 
 

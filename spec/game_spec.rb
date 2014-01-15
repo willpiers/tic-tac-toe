@@ -1,6 +1,4 @@
-require_relative './spec_helper'
-require_relative '../lib/game'
-require_relative '../lib/board'
+require 'spec_helper'
 
 describe Game do
   before(:each) do

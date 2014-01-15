@@ -1,9 +1,3 @@
-require_relative './computer_player'
-require_relative './human_player'
-require_relative './setup'
-require_relative './board'
-include Setup
-
 class Game
   attr_accessor :board
   attr_reader :who_goes_first, :opponent_type, :next_player, :winner

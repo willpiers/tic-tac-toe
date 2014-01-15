@@ -1,7 +1,4 @@
-require_relative './spec_helper'
-require_relative '../lib/game'
-require_relative '../lib/computer_player'
-require_relative '../lib/board'
+require 'spec_helper'
 
 describe ComputerPlayer do
   it "responds to game and mark" do

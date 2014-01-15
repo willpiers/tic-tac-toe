@@ -1,6 +1,3 @@
-require_relative "./setup"
-include Setup
-
 class HumanPlayer
   attr_reader :mark, :game
 

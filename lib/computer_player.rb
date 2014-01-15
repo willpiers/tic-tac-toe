@@ -1,8 +1,3 @@
-require_relative './setup'
-require_relative './game'
-require_relative './board'
-include Setup
-
 class ComputerPlayer
   attr_reader :mark, :game, :opposing_mark
 
@@ -44,10 +39,14 @@ class ComputerPlayer
   def win; complete_line(mark); end
   def block; complete_line(opposing_mark); end
 
-  def complete_line opposing_mark
-    close_line = game.board.all_lines.find { |line| line.uniq.count == 2 && !line.include?(other_mark(opposing_mark)) } || []
+  def complete_line the_mark
+    close_line = game.board.all_lines.find { |line| two_in_a_row?(line, other_mark(the_mark)) } || []
     move = close_line.find { |entry| entry.is_a? Integer }
     Setup.translate(move)
+  end
+
+  def two_in_a_row? line, mark
+    line.uniq.count == 2 && !line.include?(mark)
   end
 
   def make_fork; forks.sample; end
@@ -122,7 +121,9 @@ class ComputerPlayer
   def empty_corner; empty_space(:corners); end
 
   def empty_space type
-    space = game.board.send(type).shuffle.find { |cell| game.board.available_spaces.include?(cell) }
-    Setup.translate space
+    space = game.board.send(type).shuffle.find do |cell|
+      game.board.available_spaces.include?(cell[:val])
+    end
+    Setup.translate space[:val]
   end
 end
