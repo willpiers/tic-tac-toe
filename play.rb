@@ -1,5 +1,6 @@
 require './lib/game'
 require './lib/setup'
+require './lib/board'
 include Setup
 
 
@@ -8,7 +9,7 @@ game = Game.new({
   who_goes_first: Setup.determine_first_player
 })
 
-Setup.draw_board game.board_matrix
+Setup.draw_board game.board
 
 until game.is_over?
   game.play_a_turn

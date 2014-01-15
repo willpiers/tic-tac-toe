@@ -1,6 +1,7 @@
 require_relative './spec_helper'
 require_relative '../lib/game'
 require_relative '../lib/computer_player'
+require_relative '../lib/board'
 
 describe ComputerPlayer do
   it "responds to game and mark" do
@@ -16,32 +17,6 @@ describe ComputerPlayer do
   end
 
   describe '#move' do
-    boards = [
-      [['O',2,3],['O',5,6],[7,8,9]],
-      [[1,'O',3],[4,'O',6],[7,8,9]],
-      [[1,2,'O'],[4,5,'O'],[7,8,9]],
-      [[1,2,3],['O',5,6],['O',8,9]],
-      [[1,2,3],[4,'O',6],[7,'O',9]],
-      [[1,2,3],[4,5,'O'],[7,8,'O']],
-      [['O',2,3],[4,5,6],['O',8,9]],
-      [[1,'O',3],[4,5,6],[7,'O',9]],
-      [[1,2,'O'],[4,5,6],[7,8,'O']],
-      [[1,'O','O'],[4,5,6],[7,8,9]],
-      [['O','O',3],[4,5,6],[7,8,9]],
-      [['O',2,'O'],[4,5,6],[7,8,9]],
-      [[1,2,3],[4,'O','O'],[7,8,9]],
-      [[1,2,3],['O','O',6],[7,8,9]],
-      [[1,2,3],['O',5,'O'],[7,8,9]],
-      [[1,2,3],[4,5,6],[7,'O','O']],
-      [[1,2,3],[4,5,6],['O','O',9]],
-      [[1,2,3],[4,5,6],['O',8,'O']],
-      [['O',2,3],[4,'O',6],[7,8,9]],
-      [['O',2,3],[4,5,6],[7,8,'O']],
-      [[1,2,3],[4,'O',6],[7,8,'O']],
-      [[1,2,'O'],[4,'O',6],[7,8,9]],
-      [[1,2,'O'],[4,5,6],['O',8,9]],
-      [[1,2,3],[4,'O',6],['O',8,9]]
-    ]
     context 'when they have a chance to win' do
       # only boards which are one move away from ending
       boards = [
@@ -73,7 +48,7 @@ describe ComputerPlayer do
       boards.each do |board|
         it "makes a move which results in the win" do
           game = Game.new
-          game.board_matrix = board
+          game.board = Board.new board
           computer_player = ComputerPlayer.new(game, 'O')
 
           expect(game.is_over?).to be_false
@@ -114,7 +89,7 @@ describe ComputerPlayer do
       boards.each do |board|
         it "blocks the win" do
           game = Game.new
-          game.board_matrix = board
+          game.board = Board.new board
           computer_player = ComputerPlayer.new(game, 'X')
           opponent = ComputerPlayer.new(game, 'O')
 
@@ -135,7 +110,7 @@ describe ComputerPlayer do
       boards.each do |board|
         it "makes a fork" do
           game = Game.new
-          game.board_matrix = board
+          game.board = Board.new board
           computer_player = ComputerPlayer.new(game, 'O')
           opponent = ComputerPlayer.new(game, 'X')
 
@@ -152,7 +127,7 @@ describe ComputerPlayer do
     it "returns a move hash when one is available" do
       game = Game.new
       computer_player = ComputerPlayer.new(game, 'X')
-      game.board_matrix = [[1,'O',3],['O',5,6],[7,'O',9]]
+      game.board = Board.new [[1,'O',3],['O',5,6],[7,'O',9]]
 
       expect(computer_player.empty_side).to eq({row: 1, column: 2})
     end

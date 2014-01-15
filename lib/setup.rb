@@ -28,7 +28,7 @@ module Setup
     puts "You're #{mark}'s, in case you forgot."
 
     loop do
-      raw_location = gets.chomp.to_i
+      raw_location = accept_input.to_i
       if valid_input?(game, raw_location)
         mark_location = translate(raw_location)
         return mark_location
@@ -40,7 +40,7 @@ module Setup
 
   def self.draw_board board
     colors = color_board(board)
-    system 'clear'
+    clear_screen
     puts "     |     |      "
     puts "  #{ colors[0] }  |  #{ colors[1] }  |  #{ colors[2] }"
     puts "_____|_____|_____"
@@ -52,19 +52,21 @@ module Setup
     puts "     |     |    "
   end
 
+  def clear_screen; system 'clear'; end
+
   def self.color_board board
     board.flatten.map do |entry|
       case entry
       when 'X' then entry.colorize(:blue)
       when 'O' then entry.colorize(:red)
-      else entry.to_s.colorize(:green)
+      else entry
       end
     end
   end
 
   def self.congratulate_winner game
-    winner = 'X' if game.check_all_lines('X')
-    winner = 'O' if game.check_all_lines('O')
+    winner = 'X' if game.board.check_all_lines('X')
+    winner = 'O' if game.board.check_all_lines('O')
     if winner
       message = winner ? "Good job #{winner}'s" : "Cat's game!"
       puts message
@@ -83,7 +85,7 @@ module Setup
   def valid_input? game, location
     return false unless location.is_a?(Integer)
     return false unless location > 0 || location < 10
-    return false unless game.available_spaces.include?(location)
+    return false unless game.board.available_spaces.include?(location)
     true
   end
 

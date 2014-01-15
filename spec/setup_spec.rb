@@ -1,5 +1,6 @@
 require_relative './spec_helper'
 require_relative '../lib/setup'
+require_relative '../lib/board'
 include Setup
 
 describe Setup do
@@ -63,7 +64,7 @@ describe Setup do
     context "when given a location that is already occupied" do
       it "returns false" do
         game = Game.new
-        game.board_matrix = [['X',2,3],[4,5,6],[7,8,9]]
+        game.board = Board.new [['X',2,3],[4,5,6],[7,8,9]]
         expect(Setup.valid_input?(game, 1)).to be_false
       end
     end
@@ -80,6 +81,23 @@ describe Setup do
         expect(Setup.valid_input?(Game.new, 1)).to be_true
         expect(Setup.valid_input?(Game.new, 9)).to be_true
       end
+    end
+  end
+
+  describe '.determine_user_move' do
+    it "prompts user to enter a move" do
+      Setup.stub(:accept_input).and_return('5')
+      output = capture_stdout { Setup.determine_user_move(Game.new, 'X') }
+      expect(output).to eq "Pick an open square to move.\nYou're X's, in case you forgot.\n"
+    end
+  end
+
+  describe '.draw_board' do
+    it 'draws the board to stdout' do
+      Setup.stub(:clear_screen)
+      board = Board.new [[1,2,3],[4,5,6],[7,8,9]]
+      output = capture_stdout { Setup.draw_board(board) }
+      expect(output).to eq "     |     |      \n  1  |  2  |  3\n_____|_____|_____\n     |     |    \n  4  |  5  |  6\n_____|_____|_____\n     |     |    \n  7  |  8  |  9\n     |     |    \n"
     end
   end
 end

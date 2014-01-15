@@ -1,19 +1,20 @@
 require_relative './spec_helper'
 require_relative '../lib/game'
+require_relative '../lib/board'
 
 describe Game do
   before(:each) do
     @game = Game.new
   end
 
-  it "responds to board_matrix" do
-    expect(Game.new).to respond_to :board_matrix
+  it "responds to board" do
+    expect(Game.new).to respond_to :board
   end
 
   describe '#initialize' do
     it "sets up the board_matrix" do
       starting_matrix = [[1,2,3],[4,5,6],[7,8,9]]
-      expect(Game.new.board_matrix).to eq starting_matrix
+      expect(Game.new.board).to eq starting_matrix
     end
   end
 
@@ -25,7 +26,7 @@ describe Game do
     end
 
     it "returns true when there are 3 X's veritcally" do
-      @game.board_matrix = [['unimportant', nil, 'X',],[2,'hello','X'],['O','X','X']]
+      @game.board = Board.new [['unimportant', nil, 'X',],[2,'hello','X'],['O','X','X']]
       expect(@game.is_over?).to be_true
     end
   end
@@ -33,22 +34,22 @@ describe Game do
   describe '#available_spaces' do
     context "when no moves have been made" do
       it "returns a flat array with all board spaces" do
-        @game.board_matrix = [[1,2,3],[4,5,6],[7,8,9]]
-        expect(@game.available_spaces).to eq [1,2,3,4,5,6,7,8,9]
+        @game.board = Board.new [[1,2,3],[4,5,6],[7,8,9]]
+        expect(@game.board.available_spaces).to eq [1,2,3,4,5,6,7,8,9]
       end
     end
 
     context "when some moves have been made" do
       it "returns an array of space numbers" do
-        @game.board_matrix = [[1,2,'O'],['X',5,'O'],['X',8,9]]
-        expect(@game.available_spaces).to eq [1,2,5,8,9]
+        @game.board = Board.new [[1,2,'O'],['X',5,'O'],['X',8,9]]
+        expect(@game.board.available_spaces).to eq [1,2,5,8,9]
       end
     end
 
     context "when the board is filled" do
       it "renturns an empty array" do
-        @game.board_matrix = [['O','X','O'],['X','X','O'],['X','O','X']]
-        expect(@game.available_spaces).to eq []
+        @game.board = Board.new [['O','X','O'],['X','X','O'],['X','O','X']]
+        expect(@game.board.available_spaces).to eq []
       end
     end
   end

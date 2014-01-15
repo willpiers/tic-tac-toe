@@ -1,4 +1,6 @@
 require_relative './setup'
+require_relative './game'
+require_relative './board'
 include Setup
 
 class ComputerPlayer
@@ -41,7 +43,7 @@ class ComputerPlayer
   def block; complete_line(opposing_mark); end
 
   def complete_line opposing_mark
-    close_line = game.all_lines.find { |line| line.uniq.count == 2 && !line.include?(other_mark(opposing_mark)) } || []
+    close_line = game.board.all_lines.find { |line| line.uniq.count == 2 && !line.include?(other_mark(opposing_mark)) } || []
     move = close_line.find { |entry| entry.is_a? Integer }
     Setup.translate(move)
   end
@@ -50,10 +52,10 @@ class ComputerPlayer
 
   def forks
     all_forks = []
-    game.intersecting_lines.each do |intersection|
+    game.board.intersecting_lines.each do |intersection|
       cell = intersection[:space]
       if fork_possible(intersection, mark)
-        if game.available_spaces.include?(cell)
+        if game.board.available_spaces.include?(cell)
           all_forks << Setup.translate(cell)
         end
       end
@@ -62,14 +64,14 @@ class ComputerPlayer
   end
 
   def block_fork_indirectly
-    game.all_lines.each do |line|
+    game.board.all_lines.each do |line|
       if line.include?(mark) && !line.include?(opposing_mark)
-        possible_choices = line & game.available_spaces
+        possible_choices = line & game.board.available_spaces
         possible_choices.each do |space_number|
           fake_game = Game.new
           fake_opponent = ComputerPlayer.new(fake_game, opposing_mark)
 
-          fake_game.board_matrix = Marshal.load( Marshal.dump( game.board_matrix ) )
+          fake_game.board = Marshal.load( Marshal.dump( game.board ) )
           fake_game.mark_board Setup.translate(space_number), mark
 
           unless fake_opponent.forks.any? { |fork| fork == fake_opponent.block }
@@ -82,9 +84,9 @@ class ComputerPlayer
   end
 
   def block_fork_directly
-    game.intersecting_lines.each do |intersection|
+    game.board.intersecting_lines.each do |intersection|
       if fork_possible(intersection, opposing_mark)
-        if game.available_spaces.include?(intersection[:space])
+        if game.board.available_spaces.include?(intersection[:space])
           return Setup.translate(intersection[:space])
         end
       end
@@ -98,17 +100,17 @@ class ComputerPlayer
   end
 
   def center
-    game.available_spaces.include?(5) ? Setup.translate(5) : nil
+    game.board.available_spaces.include?(5) ? Setup.translate(5) : nil
   end
 
   def opposite_corner
-    if game.corners[0] == opposing_mark && game.available_spaces.include?(9)
+    if game.board.corners[0] == opposing_mark && game.board.available_spaces.include?(9)
       Setup.translate(9)
-    elsif game.corners[1] == opposing_mark && game.available_spaces.include?(7)
+    elsif game.board.corners[1] == opposing_mark && game.board.available_spaces.include?(7)
       Setup.translate(7)
-    elsif game.corners[2] == opposing_mark && game.available_spaces.include?(3)
+    elsif game.board.corners[2] == opposing_mark && game.board.available_spaces.include?(3)
       Setup.translate(3)
-    elsif game.corners[3] == opposing_mark && game.available_spaces.include?(1)
+    elsif game.board.corners[3] == opposing_mark && game.board.available_spaces.include?(1)
       Setup.translate(1)
     end
   end
@@ -117,7 +119,7 @@ class ComputerPlayer
   def empty_corner; empty_space(:corners); end
 
   def empty_space type
-    space = game.send(type).shuffle.find { |cell| game.available_spaces.include?(cell) }
+    space = game.board.send(type).shuffle.find { |cell| game.board.available_spaces.include?(cell) }
     Setup.translate space
   end
 end
