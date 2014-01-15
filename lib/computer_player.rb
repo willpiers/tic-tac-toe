@@ -52,16 +52,9 @@ class ComputerPlayer
   def make_fork; forks.sample; end
 
   def forks
-    all_forks = []
-    game.board.intersecting_lines.each do |intersection|
-      cell = intersection[:space]
-      if fork_possible(intersection, mark)
-        if game.board.available_spaces.include?(cell)
-          all_forks << Setup.translate(cell)
-        end
-      end
-    end
-    all_forks
+    game.board.intersecting_lines.select do |junction|
+      fork_possible(junction, mark) && game.board.available_spaces.include?(junction[:space])
+    end.map { |junction| Setup.translate junction[:space] }
   end
 
   def block_fork_indirectly
