@@ -91,9 +91,9 @@ describe Setup do
 
   describe '.draw_board' do
     it 'draws the board to stdout' do
-      Setup.stub(:clear_screen)
       board = Board.new [[1,2,3],[4,5,6],[7,8,9]]
-      output = capture_stdout { Setup.draw_board(board) }
+      board.stub(:clear_screen)
+      output = capture_stdout { board.draw }
       expect(output).to eq "     |     |      \n  1  |  2  |  3\n_____|_____|_____\n     |     |    \n  4  |  5  |  6\n_____|_____|_____\n     |     |    \n  7  |  8  |  9\n     |     |    \n"
     end
   end

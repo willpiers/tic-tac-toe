@@ -11,7 +11,7 @@ game = Game.new({
   who_goes_first: Setup.determine_first_player
 })
 
-Setup.draw_board game.board
+game.board.draw
 
 until game.is_over?
   game.play_a_turn

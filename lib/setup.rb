@@ -1,5 +1,3 @@
-require 'colorize'
-
 module Setup
   def self.determine_opponent_type
     puts "would you like to play against a friend, or the computer?"
@@ -34,32 +32,6 @@ module Setup
         return mark_location
       else
         puts "Please choose an available space on the board."
-      end
-    end
-  end
-
-  def self.draw_board board
-    colors = color_board(board)
-    clear_screen
-    puts "     |     |      "
-    puts "  #{ colors[0] }  |  #{ colors[1] }  |  #{ colors[2] }"
-    puts "_____|_____|_____"
-    puts "     |     |    "
-    puts "  #{ colors[3] }  |  #{ colors[4] }  |  #{ colors[5] }"
-    puts "_____|_____|_____"
-    puts "     |     |    "
-    puts "  #{ colors[6] }  |  #{ colors[7] }  |  #{ colors[8] }"
-    puts "     |     |    "
-  end
-
-  def clear_screen; system 'clear'; end
-
-  def self.color_board board
-    board.flatten.map do |entry|
-      case entry
-      when 'X' then entry.colorize(:blue)
-      when 'O' then entry.colorize(:red)
-      else entry
       end
     end
   end
