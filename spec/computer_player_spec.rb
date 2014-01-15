@@ -121,12 +121,34 @@ describe ComputerPlayer do
   end
 
   describe '#empty_side' do
+    before(:each) do
+      @game = Game.new
+      @computer_player = ComputerPlayer.new(@game, 'X')
+    end
     it "returns a move hash when one is available" do
-      game = Game.new
-      computer_player = ComputerPlayer.new(game, 'X')
-      game.board = Board.new [[1,'O',3],['O',5,6],[7,'O',9]]
+      @game.board = Board.new [[1,'O',3],['O',5,6],[7,'O',9]]
+      expect(@computer_player.empty_side).to eq({row: 1, column: 2})
+    end
 
-      expect(computer_player.empty_side).to eq({row: 1, column: 2})
+    it "returns nil when there are no sides available" do
+      @game.board = Board.new [[1,'O',3],['O',5,'X'],[7,'O',9]]
+      expect(@computer_player.empty_side).to be_nil
+    end
+  end
+
+  describe '#empty_corner' do
+    before(:each) do
+      @game = Game.new
+      @computer_player = ComputerPlayer.new(@game, 'X')
+    end
+    it "returns a move hash when one is available" do
+      @game.board = Board.new [['X',2,'O'],[4,5,6],['O',8,9]]
+      expect(@computer_player.empty_corner).to eq({row: 2, column: 2})
+    end
+
+    it "returns nil when there are no corners available" do
+      @game.board = Board.new [['X','O','X'],['O',5,'X'],['X','O','O']]
+      expect(@computer_player.empty_corner).to be_nil
     end
   end
 

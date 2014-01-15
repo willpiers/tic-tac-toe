@@ -124,6 +124,6 @@ class ComputerPlayer
     space = game.board.send(type).shuffle.find do |cell|
       game.board.available_spaces.include?(cell[:val])
     end
-    Setup.translate space[:val]
+    space.is_a?(Hash) ? Setup.translate(space[:val]) : nil
   end
 end
