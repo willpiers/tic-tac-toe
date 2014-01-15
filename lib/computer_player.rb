@@ -6,22 +6,24 @@ include Setup
 class ComputerPlayer
   attr_reader :mark, :game, :opposing_mark
 
-  STRATEGIES = [
-    :win,
-    :block,
-    :make_fork,
-    :block_fork_indirectly,
-    :block_fork_directly,
-    :center,
-    :opposite_corner,
-    :empty_corner,
-    :empty_side,
-  ]
-
   def initialize game, mark
     @mark = mark
     @game = game
     @opposing_mark = other_mark(mark)
+  end
+
+  def strategies
+    [
+      :win,
+      :block,
+      :make_fork,
+      :block_fork_indirectly,
+      :block_fork_directly,
+      :center,
+      :opposite_corner,
+      :empty_corner,
+      :empty_side,
+    ]
   end
 
   def move
@@ -29,7 +31,7 @@ class ComputerPlayer
   end
 
   def determine_move
-    STRATEGIES.each do |strategy|
+    strategies.each do |strategy|
       chosen_move = self.send(strategy)
       return chosen_move if chosen_move
     end
@@ -104,15 +106,16 @@ class ComputerPlayer
   end
 
   def opposite_corner
-    if game.board.corners[0] == opposing_mark && game.board.available_spaces.include?(9)
-      Setup.translate(9)
-    elsif game.board.corners[1] == opposing_mark && game.board.available_spaces.include?(7)
-      Setup.translate(7)
-    elsif game.board.corners[2] == opposing_mark && game.board.available_spaces.include?(3)
-      Setup.translate(3)
-    elsif game.board.corners[3] == opposing_mark && game.board.available_spaces.include?(1)
-      Setup.translate(1)
+    game.board.corners.shuffle.each do |corner|
+      if corner[:val] == opposing_mark
+        other_corners = game.board.corners.reject { |same| same == corner }
+        opp_corner = other_corners.find do |opp|
+          corner[:row] + corner[:col] + opp[:row] + opp[:col] == 4 # would be nicer with matrices
+        end
+        return Setup.translate(opp_corner[:val]) if opp_corner[:val].is_a? Integer
+      end
     end
+    nil
   end
 
   def empty_side; empty_space(:edges); end

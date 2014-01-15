@@ -26,7 +26,12 @@ class Board < Array
 	end
 
 	def corners
-	  [self[0][0], self[0][2], self[2][0], self[2][2]]
+	  [
+	  	{row: 0, col: 0, val: self[0][0]},
+	  	{row: 0, col: 2, val: self[0][2]},
+	  	{row: 2, col: 0, val: self[2][0]},
+	  	{row: 2, col: 2, val: self[2][2]}
+	  ]
 	end
 
 	def edges

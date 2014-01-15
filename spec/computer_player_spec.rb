@@ -132,4 +132,90 @@ describe ComputerPlayer do
       expect(computer_player.empty_side).to eq({row: 1, column: 2})
     end
   end
+
+  describe '#opposite_corner' do
+    before(:each) do
+      @game = Game.new
+      @player = ComputerPlayer.new(@game, 'X')
+      @player.stub(:strategies).and_return([:opposite_corner])
+    end
+
+    context 'when the top left corner is occupied' do
+      before do
+        @game.board = Board.new [['O',2,3],[4,5,6],[7,8,9]]
+      end
+
+      it 'moves in the bottom right corner' do
+        @player.move
+        expect(@game.board).to eq Board.new([['O',2,3],[4,5,6],[7,8,'X']])
+      end
+    end
+
+    context 'when the top right corner is occupied' do
+      before do
+        @game.board = Board.new [[1,2,'O'],[4,5,6],[7,8,9]]
+      end
+
+      it 'moves in the bottom left corner' do
+        @player.move
+        expect(@game.board).to eq Board.new([[1,2,'O'],[4,5,6],['X',8,9]])
+      end
+    end
+
+    context 'when the bottom left corner is occupied' do
+      before do
+        @game.board = Board.new [[1,2,3],[4,5,6],['O',8,9]]
+      end
+
+      it 'moves in the top right corner' do
+        @player.move
+        expect(@game.board).to eq Board.new([[1,2,'X'],[4,5,6],['O',8,9]])
+      end
+    end
+
+    context 'when the bottom right corner is occupied' do
+      before do
+        @game.board = Board.new [[1,2,3],[4,5,6],[7,8,'O']]
+      end
+
+      it 'moves in the top left corner' do
+        @player.move
+        expect(@game.board).to eq Board.new([['X',2,3],[4,5,6],[7,8,'O']])
+      end
+    end
+  end
+
+  describe '#center' do
+    before(:each) do
+      @game = Game.new
+      @game.board = Board.new [[1,2,3],[4,5,6],[7,8,9]]
+      @player = ComputerPlayer.new(@game, 'X')
+      @player.stub(:strategies).and_return([:center])
+    end
+
+    context 'when the center is available' do
+      it "marks the center square" do
+        @player.move
+        expect(@game.board).to eq [[1,2,3],[4,'X',6],[7,8,9]]
+      end
+    end
+
+    context 'when the center is marked' do
+      it "returns nil" do
+        @game.board[1][1] = 'O'
+        expect(@player.center).to eq nil
+      end
+    end
+  end
+
+  describe '#block_fork_directly' do
+    it 'blocks moves in a spot to block the fork immediately' do
+      game = Game.new
+      game.board = Board.new [[1,'O',3],[4,'X','O'],[7,8,9]] #just one case. could be much better. TODO
+      player = ComputerPlayer.new(game, 'X')
+      player.stub(:strategies).and_return([:block_fork_directly])
+      player.move
+      expect(game.board).to eq Board.new [[1,'O','X'],[4,'X','O'],[7,8,9]]
+    end
+  end
 end
