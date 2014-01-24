@@ -97,6 +97,33 @@ describe Setup do
       expect(output).to eq "     |     |      \n  1  |  2  |  3\n_____|_____|_____\n     |     |    \n  4  |  5  |  6\n_____|_____|_____\n     |     |    \n  7  |  8  |  9\n     |     |    \n"
     end
   end
+
+  describe '.congratulate_winner' do
+    context 'when there is a winner' do
+      before do
+        @game = Game.new
+        @game.board.stub(:check_all_lines).with('X').and_return true
+        @game.board.stub(:check_all_lines).with('O').and_return false
+      end
+
+      it 'congratulates the winner' do
+        output = capture_stdout { Setup.congratulate_winner @game }
+        expect(output).to eq "Good job X's\n"
+      end
+    end
+
+    context "when it is a cat's game" do
+      before do
+        @game = Game.new
+        @game.board.stub(:check_all_lines).and_return false
+      end
+
+      it "tells players that the game is a cat's game" do
+        output = capture_stdout { Setup.congratulate_winner @game }
+        expect(output).to eq "Cat's game!\n"
+      end
+    end
+  end
 end
 
 

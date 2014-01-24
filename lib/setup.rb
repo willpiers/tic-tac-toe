@@ -39,12 +39,8 @@ module Setup
   def self.congratulate_winner game
     winner = 'X' if game.board.check_all_lines('X')
     winner = 'O' if game.board.check_all_lines('O')
-    if winner
-      message = winner ? "Good job #{winner}'s" : "Cat's game!"
-      puts message
-    else
-      puts "Cat's game!"
-    end
+    message = winner ? "Good job #{winner}'s" : "Cat's game!"
+    puts message
   end
 
   def translate mark_location
