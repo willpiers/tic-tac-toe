@@ -9,6 +9,14 @@ Requirements
   - Should work fine with any version >= 1.9
   - You'll need a command line interface equivalent to terminal on Mac OS X
   
+Installation
+--
+```
+git clone https://github.com/willpiers/tic-tac-toe.git
+cd tic-tac-toe
+bundle install
+```
+
 Tests
 --
   - Testing is done with rspec
@@ -16,14 +24,6 @@ Tests
 Run all tests with 
 ```
 rspec spec
-```
-
-Installation
---
-```
-git clone https://github.com/willpiers/tic-tac-toe.git
-cd tic-tac-toe
-bundle install
 ```
 
 Play
