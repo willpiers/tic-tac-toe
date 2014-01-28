@@ -27,7 +27,7 @@ class Game
 
   def play_a_turn
     next_player.move
-    board.draw
+    TttIO.draw board
     toggle_next_player
   end
 

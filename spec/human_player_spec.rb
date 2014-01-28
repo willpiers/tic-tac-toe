@@ -14,7 +14,7 @@ describe HumanPlayer do
 
   describe '#move' do
     it "marks the board according to the user's choice of move" do
-      Setup.stub(:accept_input).and_return('5')
+      TttIO.stub(:accept_input).and_return('5')
       output = capture_stdout { @player.move }
       expect(@game.board).to eq Board.new([[1,2,3],[4,'X',6],[7,8,9]])
     end

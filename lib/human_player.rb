@@ -7,7 +7,7 @@ class HumanPlayer
   end
 
   def move
-    mark_location = Setup.determine_user_move(game, mark)
+    mark_location = TttIO.determine_user_move(game, mark)
     game.mark_board mark_location, mark
   end
 end

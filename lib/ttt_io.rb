@@ -1,4 +1,4 @@
-module Setup
+class TttIO
   def self.determine_opponent_type
     puts "would you like to play against a friend, or the computer?"
 
@@ -28,10 +28,36 @@ module Setup
     loop do
       raw_location = accept_input.to_i
       if valid_input?(game, raw_location)
-        mark_location = translate(raw_location)
+        mark_location = to_coordinates(raw_location)
         return mark_location
       else
         puts "Please choose an available space on the board."
+      end
+    end
+  end
+
+  def self.draw board
+    colors = color_board(board)
+    clear_screen
+    puts "     |     |      "
+    puts "  #{ colors[0] }  |  #{ colors[1] }  |  #{ colors[2] }"
+    puts "_____|_____|_____"
+    puts "     |     |    "
+    puts "  #{ colors[3] }  |  #{ colors[4] }  |  #{ colors[5] }"
+    puts "_____|_____|_____"
+    puts "     |     |    "
+    puts "  #{ colors[6] }  |  #{ colors[7] }  |  #{ colors[8] }"
+    puts "     |     |    "
+  end
+
+  def self.clear_screen; system 'clear'; end
+
+  def self.color_board board
+    board.flatten.map do |entry|
+      case entry
+      when 'X' then entry.colorize(:blue)
+      when 'O' then entry.colorize(:red)
+      else entry
       end
     end
   end
@@ -43,14 +69,14 @@ module Setup
     puts message
   end
 
-  def translate mark_location
+  def self.to_coordinates mark_location
     return nil unless mark_location
     row = (mark_location.to_f/3.0).ceil - 1
     column = (mark_location - 1) % 3
     {row: row, column: column}
   end
 
-  def valid_input? game, location
+  def self.valid_input? game, location
     return false unless location.is_a?(Integer)
     return false unless location > 0 || location < 10
     return false unless game.board.available_spaces.include?(location)

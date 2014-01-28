@@ -81,30 +81,4 @@ class Board < Array
       {first: column(2), second: get_diagonals.last, space: 3}
     ]
   end
-
-  def draw
-    colors = color_board
-    clear_screen
-    puts "     |     |      "
-    puts "  #{ colors[0] }  |  #{ colors[1] }  |  #{ colors[2] }"
-    puts "_____|_____|_____"
-    puts "     |     |    "
-    puts "  #{ colors[3] }  |  #{ colors[4] }  |  #{ colors[5] }"
-    puts "_____|_____|_____"
-    puts "     |     |    "
-    puts "  #{ colors[6] }  |  #{ colors[7] }  |  #{ colors[8] }"
-    puts "     |     |    "
-  end
-
-  def clear_screen; system 'clear'; end
-
-  def color_board
-    flatten.map do |entry|
-      case entry
-      when 'X' then entry.colorize(:blue)
-      when 'O' then entry.colorize(:red)
-      else entry
-      end
-    end
-  end
 end

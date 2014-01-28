@@ -44,7 +44,7 @@ class ComputerPlayer
   def complete_line the_mark
     close_line = game.board.all_lines.find { |line| two_in_a_row?(line, other_mark(the_mark)) } || []
     move = close_line.find { |entry| entry.is_a? Integer }
-    Setup.translate(move)
+    TttIO.to_coordinates(move)
   end
 
   def two_in_a_row? line, mark
@@ -56,7 +56,7 @@ class ComputerPlayer
   def forks
     game.board.intersecting_lines.select do |junction|
       fork_possible(junction, mark) && game.board.available_spaces.include?(junction[:space])
-    end.map { |junction| Setup.translate junction[:space] }
+    end.map { |junction| TttIO.to_coordinates junction[:space] }
   end
 
   def block_fork_indirectly
@@ -68,10 +68,10 @@ class ComputerPlayer
           fake_opponent = ComputerPlayer.new(fake_game, opposing_mark)
 
           fake_game.board = Marshal.load( Marshal.dump( game.board ) )
-          fake_game.mark_board Setup.translate(space_number), mark
+          fake_game.mark_board TttIO.to_coordinates(space_number), mark
 
           unless fake_opponent.forks.any? { |fork| fork == fake_opponent.block }
-            return Setup.translate(space_number)
+            return TttIO.to_coordinates(space_number)
           end
         end
       end
@@ -83,7 +83,7 @@ class ComputerPlayer
     game.board.intersecting_lines.each do |intersection|
       if fork_possible(intersection, opposing_mark)
         if game.board.available_spaces.include?(intersection[:space])
-          return Setup.translate(intersection[:space])
+          return TttIO.to_coordinates(intersection[:space])
         end
       end
     end
@@ -96,7 +96,7 @@ class ComputerPlayer
   end
 
   def center
-    game.board.available_spaces.include?(5) ? Setup.translate(5) : nil
+    game.board.available_spaces.include?(5) ? TttIO.to_coordinates(5) : nil
   end
 
   def opposite_corner
@@ -106,7 +106,7 @@ class ComputerPlayer
         opp_corner = other_corners.find do |opp|
           corner[:row] + corner[:col] + opp[:row] + opp[:col] == 4 # would be nicer with matrices
         end
-        return Setup.translate(opp_corner[:val]) if opp_corner[:val].is_a? Integer
+        return TttIO.to_coordinates(opp_corner[:val]) if opp_corner[:val].is_a? Integer
       end
     end
     nil
@@ -119,6 +119,6 @@ class ComputerPlayer
     space = game.board.send(type).shuffle.find do |cell|
       game.board.available_spaces.include?(cell[:val])
     end
-    space.is_a?(Hash) ? Setup.translate(space[:val]) : nil
+    space.is_a?(Hash) ? TttIO.to_coordinates(space[:val]) : nil
   end
 end
