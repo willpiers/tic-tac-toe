@@ -1,3 +1,7 @@
+require 'board'
+require 'human_player'
+require 'computer_player'
+
 class Game
   attr_accessor :board
   attr_reader :who_goes_first, :opponent_type, :next_player, :winner

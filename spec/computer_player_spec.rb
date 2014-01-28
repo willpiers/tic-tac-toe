@@ -1,4 +1,7 @@
+require 'game'
+require 'setup'
 require 'spec_helper'
+include Setup
 
 describe ComputerPlayer do
   it "responds to game and mark" do

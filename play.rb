@@ -1,10 +1,8 @@
-require './lib/setup'
-require './lib/game'
-require './lib/board'
-require './lib/human_player'
-require './lib/computer_player'
-include Setup
+$LOAD_PATH << File.expand_path(File.dirname(__FILE__) + "/lib")
 
+require 'setup'
+require 'game'
+include Setup
 
 game = Game.new({
   opponent_type: Setup.determine_opponent_type,

@@ -1,3 +1,5 @@
+require 'game'
+
 class ComputerPlayer
   attr_reader :mark, :game, :opposing_mark
 
