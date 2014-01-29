@@ -1,11 +1,7 @@
 require 'colorize'
 
 class Board < Array
-  def impossible_to_win?
-    all_lines.all? { |line| line.include?('X') && line.include?('O') }
-  end
-
-  def all_squares_marked?
+  def full?
     flatten.all? { |entry| entry == 'X' || entry == 'O' }
   end
 

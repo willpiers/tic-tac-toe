@@ -38,6 +38,18 @@ class ComputerPlayer
     mark == 'X' ? 'O' : 'X'
   end
 
+  def two_in_a_row? line, mark
+    line.uniq.count == 2 && !line.include?(mark)
+  end
+
+  def forks
+    game.board.intersecting_lines.select do |junction|
+      fork_possible(junction, mark) && game.board.available_spaces.include?(junction[:space])
+    end.map { |junction| TttIO.to_coordinates junction[:space] }
+  end
+
+  private
+
   def win; complete_line(mark); end
   def block; complete_line(opposing_mark); end
 
@@ -47,17 +59,7 @@ class ComputerPlayer
     TttIO.to_coordinates(move)
   end
 
-  def two_in_a_row? line, mark
-    line.uniq.count == 2 && !line.include?(mark)
-  end
-
   def make_fork; forks.sample; end
-
-  def forks
-    game.board.intersecting_lines.select do |junction|
-      fork_possible(junction, mark) && game.board.available_spaces.include?(junction[:space])
-    end.map { |junction| TttIO.to_coordinates junction[:space] }
-  end
 
   def block_fork_indirectly
     game.board.all_lines.each do |line|

@@ -25,18 +25,18 @@ describe Board do
     end
   end
 
-  describe '#all_squares_marked?' do
+  describe '#full?' do
     context 'when all squares are marked' do
       it 'is truthy' do
         board = Board.new [['O','X','X'],['X','X','O'],['X','O','X']]
-        expect(board.all_squares_marked?).to be_true
+        expect(board.full?).to be_true
       end
     end
 
     context 'when some squares are not marked' do
       it 'is falsy' do
         board = Board.new [[1,2,3],['O','X','O'],['X','O','X']]
-        expect(board.all_squares_marked?).to be_false
+        expect(board.full?).to be_false
       end
     end
   end

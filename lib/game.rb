@@ -31,17 +31,23 @@ class Game
     toggle_next_player
   end
 
-  def toggle_next_player
-    @next_player = @next_player == @player1 ? @player2 : @player1
+  def is_over?
+    @winner = 'X' if board.check_all_lines('X')
+    @winner = 'O' if board.check_all_lines('O')
+    board.full? || !!@winner || impossible_to_win?
   end
 
   def mark_board location, mark
     board[location[:row]][location[:column]] = mark
   end
 
-  def is_over?
-    @winner = 'X' if board.check_all_lines('X')
-    @winner = 'O' if board.check_all_lines('O')
-    board.all_squares_marked? || !!@winner || board.impossible_to_win?
+  private
+
+  def toggle_next_player
+    @next_player = @next_player == @player1 ? @player2 : @player1
+  end
+
+  def impossible_to_win?
+    board.all_lines.all? { |line| line.include?('X') && line.include?('O') }
   end
 end
