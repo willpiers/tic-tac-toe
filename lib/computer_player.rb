@@ -9,6 +9,10 @@ class ComputerPlayer
     @opposing_mark = other_mark(mark)
   end
 
+  def board
+    game.board
+  end
+
   def strategies
     [
       :win,
@@ -24,7 +28,7 @@ class ComputerPlayer
   end
 
   def move
-    game.board.mark determine_move, mark
+    board.mark determine_move, mark
   end
 
   def determine_move
@@ -43,8 +47,8 @@ class ComputerPlayer
   end
 
   def forks
-    game.board.intersections.select do |junction|
-      fork_possible(junction, mark) && game.board.available?(junction[:space])
+    board.intersections.select do |junction|
+      fork_possible(junction, mark) && board.available?(junction[:space])
     end.map { |junction| TttIO.to_coordinates junction[:space] }
   end
 
@@ -54,7 +58,7 @@ class ComputerPlayer
   def block; complete_line(opposing_mark); end
 
   def complete_line the_mark
-    close_line = game.board.all_lines.find { |line| two_in_a_row?(line, other_mark(the_mark)) } || []
+    close_line = board.all_lines.find { |line| two_in_a_row?(line, other_mark(the_mark)) } || []
     move = close_line.find { |entry| entry.is_a? Integer }
     TttIO.to_coordinates(move)
   end
@@ -62,14 +66,14 @@ class ComputerPlayer
   def make_fork; forks.sample; end
 
   def block_fork_indirectly
-    game.board.all_lines.shuffle.each do |line|
+    board.all_lines.shuffle.each do |line|
       if line.include?(mark) && !line.include?(opposing_mark)
-        possible_choices = line & game.board.available_spaces
+        possible_choices = line & board.available_spaces
         possible_choices.each do |space_number|
           fake_game = Game.new
           fake_opponent = ComputerPlayer.new(fake_game, opposing_mark)
 
-          fake_game.board = Marshal.load( Marshal.dump( game.board ) )
+          fake_game.board = Marshal.load( Marshal.dump( board ) )
           fake_game.board.mark TttIO.to_coordinates(space_number), mark
 
           unless fake_opponent.forks.any? { |fork| fork == fake_opponent.send(:block) }
@@ -82,9 +86,9 @@ class ComputerPlayer
   end
 
   def block_fork_directly
-    game.board.intersections.shuffle.each do |intersection|
+    board.intersections.shuffle.each do |intersection|
       if fork_possible(intersection, opposing_mark)
-        if game.board.available?(intersection[:space])
+        if board.available?(intersection[:space])
           return TttIO.to_coordinates(intersection[:space])
         end
       end
@@ -98,13 +102,14 @@ class ComputerPlayer
   end
 
   def center
-    game.board.available?(5) ? TttIO.to_coordinates(5) : nil
+    center = TttIO.to_coordinates(5)
+    board.available?(center) ? center : nil
   end
 
   def opposite_corner
-    game.board.corners.shuffle.each do |corner|
+    board.corners.shuffle.each do |corner|
       if corner[:val] == opposing_mark
-        other_corners = game.board.corners.reject { |same| same == corner }
+        other_corners = board.corners.reject { |same| same == corner }
         opp_corner = other_corners.find do |opp|
           corner[:row] + corner[:column] + opp[:row] + opp[:column] == 4 # would be nicer with matrices
         end
@@ -118,8 +123,8 @@ class ComputerPlayer
   def empty_corner; empty_space(:corners); end
 
   def empty_space type
-    space = game.board.send(type).shuffle.find do |cell|
-      game.board.available?(cell)
+    space = board.send(type).shuffle.find do |cell|
+      board.available?(cell)
     end
     space.is_a?(Hash) ? TttIO.to_coordinates(space[:val]) : nil
   end
