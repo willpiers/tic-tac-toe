@@ -43,8 +43,8 @@ class ComputerPlayer
   end
 
   def forks
-    game.board.intersecting_lines.select do |junction|
-      fork_possible(junction, mark) && game.board.available_spaces.include?(junction[:space])
+    game.board.intersections.select do |junction|
+      fork_possible(junction, mark) && game.board.available?(junction[:space])
     end.map { |junction| TttIO.to_coordinates junction[:space] }
   end
 
@@ -62,7 +62,7 @@ class ComputerPlayer
   def make_fork; forks.sample; end
 
   def block_fork_indirectly
-    game.board.all_lines.each do |line|
+    game.board.all_lines.shuffle.each do |line|
       if line.include?(mark) && !line.include?(opposing_mark)
         possible_choices = line & game.board.available_spaces
         possible_choices.each do |space_number|
@@ -82,9 +82,9 @@ class ComputerPlayer
   end
 
   def block_fork_directly
-    game.board.intersecting_lines.each do |intersection|
+    game.board.intersections.shuffle.each do |intersection|
       if fork_possible(intersection, opposing_mark)
-        if game.board.available_spaces.include?(intersection[:space])
+        if game.board.available?(intersection[:space])
           return TttIO.to_coordinates(intersection[:space])
         end
       end
@@ -98,7 +98,7 @@ class ComputerPlayer
   end
 
   def center
-    game.board.available_spaces.include?(5) ? TttIO.to_coordinates(5) : nil
+    game.board.available?(5) ? TttIO.to_coordinates(5) : nil
   end
 
   def opposite_corner
@@ -106,7 +106,7 @@ class ComputerPlayer
       if corner[:val] == opposing_mark
         other_corners = game.board.corners.reject { |same| same == corner }
         opp_corner = other_corners.find do |opp|
-          corner[:row] + corner[:col] + opp[:row] + opp[:col] == 4 # would be nicer with matrices
+          corner[:row] + corner[:column] + opp[:row] + opp[:column] == 4 # would be nicer with matrices
         end
         return TttIO.to_coordinates(opp_corner[:val]) if opp_corner[:val].is_a? Integer
       end
@@ -119,7 +119,7 @@ class ComputerPlayer
 
   def empty_space type
     space = game.board.send(type).shuffle.find do |cell|
-      game.board.available_spaces.include?(cell[:val])
+      game.board.available?(cell)
     end
     space.is_a?(Hash) ? TttIO.to_coordinates(space[:val]) : nil
   end

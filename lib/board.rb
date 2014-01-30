@@ -9,6 +9,14 @@ class Board < Array
     flatten.all? { |entry| entry == 'X' || entry == 'O' }
   end
 
+  def available? location
+    if location.is_a?(Hash)
+      self[location[:row]][location[:column]].is_a?(Integer)
+    elsif location.is_a?(Integer)
+      flatten.include?(location)
+    end
+  end
+
   def check_all_lines mark
     all_lines.any? do |line|
       line.all? { |entry| entry == mark }
@@ -29,19 +37,19 @@ class Board < Array
 
   def corners
     [
-      {row: 0, col: 0, val: self[0][0]},
-      {row: 0, col: 2, val: self[0][2]},
-      {row: 2, col: 0, val: self[2][0]},
-      {row: 2, col: 2, val: self[2][2]}
+      {row: 0, column: 0, val: self[0][0]},
+      {row: 0, column: 2, val: self[0][2]},
+      {row: 2, column: 0, val: self[2][0]},
+      {row: 2, column: 2, val: self[2][2]}
     ]
   end
 
   def edges
     [
-      {row: 0, col: 1, val: self[0][1]},
-      {row: 1, col: 0, val: self[1][0]},
-      {row: 1, col: 2, val: self[1][2]},
-      {row: 2, col: 1, val: self[2][1]}
+      {row: 0, column: 1, val: self[0][1]},
+      {row: 1, column: 0, val: self[1][0]},
+      {row: 1, column: 2, val: self[1][2]},
+      {row: 2, column: 1, val: self[2][1]}
     ]
   end
 
@@ -55,7 +63,7 @@ class Board < Array
     flatten.select { |entry| entry.is_a? Integer }
   end
 
-  def intersecting_lines
+  def intersections
     [
       {first: row(0), second: column(0), space: 1},
       {first: row(0), second: column(1), space: 2},

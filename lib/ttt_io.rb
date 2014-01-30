@@ -79,7 +79,7 @@ class TttIO
   def self.valid_input? game, location
     return false unless location.is_a?(Integer)
     return false unless location > 0 || location < 10
-    return false unless game.board.available_spaces.include?(location)
+    return false unless game.board.available?(location)
     true
   end
 
