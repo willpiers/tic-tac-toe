@@ -1,6 +1,10 @@
 require 'colorize'
 
 class Board < Array
+  def mark location, marker
+    self[location[:row]][location[:column]] = marker
+  end
+
   def full?
     flatten.all? { |entry| entry == 'X' || entry == 'O' }
   end

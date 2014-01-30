@@ -37,10 +37,6 @@ class Game
     board.full? || !!@winner || impossible_to_win?
   end
 
-  def mark_board location, mark
-    board[location[:row]][location[:column]] = mark
-  end
-
   private
 
   def toggle_next_player

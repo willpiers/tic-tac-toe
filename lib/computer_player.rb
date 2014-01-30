@@ -24,7 +24,7 @@ class ComputerPlayer
   end
 
   def move
-    game.mark_board determine_move, mark
+    game.board.mark determine_move, mark
   end
 
   def determine_move
@@ -70,9 +70,9 @@ class ComputerPlayer
           fake_opponent = ComputerPlayer.new(fake_game, opposing_mark)
 
           fake_game.board = Marshal.load( Marshal.dump( game.board ) )
-          fake_game.mark_board TttIO.to_coordinates(space_number), mark
+          fake_game.board.mark TttIO.to_coordinates(space_number), mark
 
-          unless fake_opponent.forks.any? { |fork| fork == fake_opponent.block }
+          unless fake_opponent.forks.any? { |fork| fork == fake_opponent.send(:block) }
             return TttIO.to_coordinates(space_number)
           end
         end
