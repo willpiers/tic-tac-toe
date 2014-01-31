@@ -14,14 +14,9 @@ class Board < Array
       self[location[:row]][location[:column]].is_a?(Integer)
     elsif location.is_a?(Integer)
       flatten.include?(location)
+    else
+      false
     end
-  end
-
-  def valid_input? location
-    return false unless location.is_a?(Integer)
-    return false unless location > 0 || location < 10
-    return false unless available?(location)
-    true
   end
 
   def self.to_coordinates mark_location

@@ -41,40 +41,6 @@ describe Board do
     end
   end
 
-  describe '.valid_input?' do
-    context "when given text instead of an integer" do
-      it "returns false" do
-        blank_board = Game.new.board
-        actual = blank_board.valid_input? 'hello world'
-        expect(actual).to be_false
-      end
-    end
-
-    context "when given a location that is already occupied" do
-      it "returns false" do
-        game = Game.new
-        game.board = Board.new [['X',2,3],[4,5,6],[7,8,9]]
-        expect(game.board.valid_input?(1)).to be_false
-      end
-    end
-
-    context "when given an integer <1 or >9" do
-      it "returns false" do
-        blank_board = Game.new.board
-        expect(blank_board.valid_input?(0)).to be_false
-        expect(blank_board.valid_input?(50)).to be_false
-      end
-    end
-
-    context "when given an integer >0 and <10" do
-      it "returns true" do
-        blank_board = Game.new.board
-        expect(blank_board.valid_input?(1)).to be_true
-        expect(blank_board.valid_input?(9)).to be_true
-      end
-    end
-  end
-
   describe '.to_coordinates' do
     it "translates an integer into a hash with a row and column" do
       expected = {row: 1, column: 2}

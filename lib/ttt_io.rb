@@ -27,7 +27,7 @@ class TttIO
 
     loop do
       raw_location = accept_input.to_i
-      if board.valid_input?(raw_location)
+      if board.available?(raw_location)
         mark_location = Board.to_coordinates(raw_location)
         return mark_location
       else
