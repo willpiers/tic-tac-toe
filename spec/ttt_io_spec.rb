@@ -43,48 +43,10 @@ describe TttIO do
     end
   end
 
-  describe '.to_coordinates' do
-    it "translates an integer into a hash with a row and column" do
-      expected = {row: 1, column: 2}
-      expect(TttIO.to_coordinates(6)).to eq expected
-    end
-  end
-
-  describe '.valid_input?' do
-    context "when given text instead of an integer" do
-      it "returns false" do
-        actual = TttIO.valid_input? Game.new, 'hello world'
-        expect(actual).to be_false
-      end
-    end
-
-    context "when given a location that is already occupied" do
-      it "returns false" do
-        game = Game.new
-        game.board = Board.new [['X',2,3],[4,5,6],[7,8,9]]
-        expect(TttIO.valid_input?(game, 1)).to be_false
-      end
-    end
-
-    context "when given an integer <1 or >9" do
-      it "returns false" do
-        expect(TttIO.valid_input?(Game.new, 0)).to be_false
-        expect(TttIO.valid_input?(Game.new, 50)).to be_false
-      end
-    end
-
-    context "when given an integer >0 and <10" do
-      it "returns true" do
-        expect(TttIO.valid_input?(Game.new, 1)).to be_true
-        expect(TttIO.valid_input?(Game.new, 9)).to be_true
-      end
-    end
-  end
-
   describe '.determine_user_move' do
     it "prompts user to enter a move" do
       TttIO.stub(:accept_input).and_return('5')
-      output = capture_stdout { TttIO.determine_user_move(Game.new, 'X') }
+      output = capture_stdout { TttIO.determine_user_move(Game.new.board, 'X') }
       expect(output).to eq "Pick an open square to move.\nYou're X's, in case you forgot.\n"
     end
   end

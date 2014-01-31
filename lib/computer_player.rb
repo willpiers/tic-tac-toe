@@ -1,4 +1,5 @@
 require 'game'
+require 'board'
 
 class ComputerPlayer
   attr_reader :mark, :game, :opposing_mark
@@ -49,7 +50,7 @@ class ComputerPlayer
   def forks
     board.intersections.select do |junction|
       fork_possible(junction, mark) && board.available?(junction[:space])
-    end.map { |junction| TttIO.to_coordinates junction[:space] }
+    end.map { |junction| Board.to_coordinates junction[:space] }
   end
 
   private
@@ -60,7 +61,7 @@ class ComputerPlayer
   def complete_line the_mark
     close_line = board.all_lines.find { |line| two_in_a_row?(line, other_mark(the_mark)) } || []
     move = close_line.find { |entry| entry.is_a? Integer }
-    TttIO.to_coordinates(move)
+    Board.to_coordinates(move)
   end
 
   def make_fork; forks.sample; end
@@ -74,10 +75,10 @@ class ComputerPlayer
           fake_opponent = ComputerPlayer.new(fake_game, opposing_mark)
 
           fake_game.board = Marshal.load( Marshal.dump( board ) )
-          fake_game.board.mark TttIO.to_coordinates(space_number), mark
+          fake_game.board.mark Board.to_coordinates(space_number), mark
 
           unless fake_opponent.forks.any? { |fork| fork == fake_opponent.send(:block) }
-            return TttIO.to_coordinates(space_number)
+            return Board.to_coordinates(space_number)
           end
         end
       end
@@ -89,7 +90,7 @@ class ComputerPlayer
     board.intersections.shuffle.each do |intersection|
       if fork_possible(intersection, opposing_mark)
         if board.available?(intersection[:space])
-          return TttIO.to_coordinates(intersection[:space])
+          return Board.to_coordinates(intersection[:space])
         end
       end
     end
@@ -102,7 +103,7 @@ class ComputerPlayer
   end
 
   def center
-    center = TttIO.to_coordinates(5)
+    center = Board.to_coordinates(5)
     board.available?(center) ? center : nil
   end
 
@@ -113,7 +114,7 @@ class ComputerPlayer
         opp_corner = other_corners.find do |opp|
           corner[:row] + corner[:column] + opp[:row] + opp[:column] == 4 # would be nicer with matrices
         end
-        return TttIO.to_coordinates(opp_corner[:val]) if opp_corner[:val].is_a? Integer
+        return Board.to_coordinates(opp_corner[:val]) if opp_corner[:val].is_a? Integer
       end
     end
     nil
@@ -126,6 +127,6 @@ class ComputerPlayer
     space = board.send(type).shuffle.find do |cell|
       board.available?(cell)
     end
-    space.is_a?(Hash) ? TttIO.to_coordinates(space[:val]) : nil
+    space.is_a?(Hash) ? Board.to_coordinates(space[:val]) : nil
   end
 end

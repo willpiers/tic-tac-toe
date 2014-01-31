@@ -17,6 +17,20 @@ class Board < Array
     end
   end
 
+  def valid_input? location
+    return false unless location.is_a?(Integer)
+    return false unless location > 0 || location < 10
+    return false unless available?(location)
+    true
+  end
+
+  def self.to_coordinates mark_location
+    return nil unless mark_location
+    row = (mark_location.to_f/3.0).ceil - 1
+    column = (mark_location - 1) % 3
+    {row: row, column: column}
+  end
+
   def check_all_lines mark
     all_lines.any? do |line|
       line.all? { |entry| entry == mark }

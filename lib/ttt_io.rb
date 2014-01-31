@@ -21,14 +21,14 @@ class TttIO
     answer == '1' ? :user : :other
   end
 
-  def self.determine_user_move game, mark
+  def self.determine_user_move board, mark
     puts "Pick an open square to move."
     puts "You're #{mark}'s, in case you forgot."
 
     loop do
       raw_location = accept_input.to_i
-      if valid_input?(game, raw_location)
-        mark_location = to_coordinates(raw_location)
+      if board.valid_input?(raw_location)
+        mark_location = Board.to_coordinates(raw_location)
         return mark_location
       else
         puts "Please choose an available space on the board."
@@ -67,20 +67,6 @@ class TttIO
     winner = 'O' if game.board.check_all_lines('O')
     message = winner ? "Good job #{winner}'s" : "Cat's game!"
     puts message
-  end
-
-  def self.to_coordinates mark_location
-    return nil unless mark_location
-    row = (mark_location.to_f/3.0).ceil - 1
-    column = (mark_location - 1) % 3
-    {row: row, column: column}
-  end
-
-  def self.valid_input? game, location
-    return false unless location.is_a?(Integer)
-    return false unless location > 0 || location < 10
-    return false unless game.board.available?(location)
-    true
   end
 
   private
