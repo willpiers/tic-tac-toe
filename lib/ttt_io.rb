@@ -55,16 +55,16 @@ class TttIO
   def self.color_board board
     board.flatten.map do |entry|
       case entry
-      when 'X' then entry.colorize(:blue)
-      when 'O' then entry.colorize(:red)
+      when board.x_marker then entry.colorize(:blue)
+      when board.o_marker then entry.colorize(:red)
       else entry
       end
     end
   end
 
   def self.congratulate_winner game
-    winner = 'X' if game.board.check_all_lines('X')
-    winner = 'O' if game.board.check_all_lines('O')
+    winner = game.board.x_marker if game.board.check_all_lines(game.board.x_marker)
+    winner = game.board.o_marker if game.board.check_all_lines(game.board.o_marker)
     message = winner ? "Good job #{winner}'s" : "Cat's game!"
     puts message
   end

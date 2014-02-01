@@ -40,11 +40,7 @@ class ComputerPlayer
   end
 
   def other_mark mark
-    mark == 'X' ? 'O' : 'X'
-  end
-
-  def two_in_a_row? line, mark
-    line.uniq.count == 2 && !line.include?(mark)
+    mark == game.board.x_marker ? game.board.o_marker : game.board.x_marker
   end
 
   def forks
@@ -62,6 +58,10 @@ class ComputerPlayer
     close_line = board.all_lines.find { |line| two_in_a_row?(line, other_mark(the_mark)) } || []
     move = close_line.find { |entry| entry.is_a? Integer }
     Board.to_coordinates(move)
+  end
+
+  def two_in_a_row? line, mark
+    line.uniq.count == 2 && !line.include?(mark)
   end
 
   def make_fork; forks.sample; end

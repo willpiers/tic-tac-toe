@@ -7,7 +7,7 @@ class Game
   attr_reader :who_goes_first, :opponent_type, :next_player, :winner
 
   def initialize options={}
-    @board = Board.new [[1,2,3],[4,5,6],[7,8,9]]
+    @board = Board.new [[1,2,3],[4,5,6],[7,8,9]], {x: 'X', o: 'O'}
     @winner = nil
     @opponent_type = options[:opponent_type] || :computer
     @who_goes_first = options[:who_goes_first] || :user
@@ -16,11 +16,11 @@ class Game
 
   def setup_players
     if opponent_type == :human
-      @player1 = HumanPlayer.new(self, 'X')
-      @player2 = HumanPlayer.new(self, 'O')
+      @player1 = HumanPlayer.new(self, board.x_marker)
+      @player2 = HumanPlayer.new(self, board.o_marker)
     else
-      @player1 = who_goes_first == :user ? HumanPlayer.new(self, 'X') : ComputerPlayer.new(self, 'X')
-      @player2 = who_goes_first == :user ? ComputerPlayer.new(self, 'O') : HumanPlayer.new(self, 'O')
+      @player1 = who_goes_first == :user ? HumanPlayer.new(self, board.x_marker) : ComputerPlayer.new(self, board.x_marker)
+      @player2 = who_goes_first == :user ? ComputerPlayer.new(self, board.o_marker) : HumanPlayer.new(self, board.o_marker)
     end
     @next_player = @player1
   end
@@ -32,8 +32,8 @@ class Game
   end
 
   def is_over?
-    @winner = 'X' if board.check_all_lines('X')
-    @winner = 'O' if board.check_all_lines('O')
+    @winner = board.x_marker if board.check_all_lines(board.x_marker)
+    @winner = board.o_marker if board.check_all_lines(board.o_marker)
     board.full? || !!@winner || impossible_to_win?
   end
 
@@ -44,6 +44,6 @@ class Game
   end
 
   def impossible_to_win?
-    board.all_lines.all? { |line| line.include?('X') && line.include?('O') }
+    board.all_lines.all? { |line| line.include?(board.x_marker) && line.include?(board.o_marker) }
   end
 end

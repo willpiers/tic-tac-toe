@@ -1,12 +1,20 @@
 require 'colorize'
 
 class Board < Array
+  attr_reader :x_marker, :o_marker
+
+  def initialize ary, markers={}
+    super ary
+    @x_marker = markers[:x] || 'X'
+    @o_marker = markers[:o] || 'O'
+  end
+
   def mark location, marker
     self[location[:row]][location[:column]] = marker
   end
 
   def full?
-    flatten.all? { |entry| entry == 'X' || entry == 'O' }
+    flatten.all? { |entry| entry == x_marker || entry == o_marker }
   end
 
   def available? location
