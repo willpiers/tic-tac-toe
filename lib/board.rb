@@ -1,16 +1,27 @@
 require 'colorize'
 
 class Board < Array
-  attr_reader :x_marker, :o_marker
+  attr_reader :x_marker, :o_marker, :board_size
 
   def initialize ary, markers={}
     super ary
     @x_marker = markers[:x] || 'X'
     @o_marker = markers[:o] || 'O'
+    @board_size = 3
   end
 
   def mark location, marker
     self[location[:row]][location[:column]] = marker
+  end
+
+  def value_at location
+    self[location[:row]][location[:column]]
+  end
+
+  def values_at locations
+    locations.map do |location|
+      value_at location
+    end
   end
 
   def full?
@@ -36,48 +47,49 @@ class Board < Array
 
   def check_all_lines mark
     all_lines.any? do |line|
-      line.all? { |entry| entry == mark }
+      line.all? { |location| value_at(location) == mark }
     end
   end
 
   def all_lines; [get_rows, get_columns, get_diagonals].flatten(1); end
-  def get_rows; self; end
+  def get_rows; [row(0),row(1),row(2)]; end
   def get_columns; [column(0),column(1),column(2)]; end
 
   def row row_number
-    self[row_number]
+    (0...board_size).map { |col_number| {row: row_number, column: col_number} }
   end
 
   def column col_number
-    map { |row| row[col_number] }
+    (0...board_size).map { |row_number| {row: row_number, column: col_number} }
   end
 
   def corners
     [
-      {row: 0, column: 0, val: self[0][0]},
-      {row: 0, column: 2, val: self[0][2]},
-      {row: 2, column: 0, val: self[2][0]},
-      {row: 2, column: 2, val: self[2][2]}
+      {row: 0, column: 0},
+      {row: 0, column: 2},
+      {row: 2, column: 0},
+      {row: 2, column: 2}
     ]
   end
 
   def edges
     [
-      {row: 0, column: 1, val: self[0][1]},
-      {row: 1, column: 0, val: self[1][0]},
-      {row: 1, column: 2, val: self[1][2]},
-      {row: 2, column: 1, val: self[2][1]}
+      {row: 0, column: 1},
+      {row: 1, column: 0},
+      {row: 1, column: 2},
+      {row: 2, column: 1}
     ]
   end
 
   def get_diagonals
-    left_to_right = [self[0][0], self[1][1], self[2][2]]
-    right_to_left = [self[0][2], self[1][1], self[2][0]]
+    center = Board.to_coordinates(5)
+    left_to_right = [Board.to_coordinates(1), center, Board.to_coordinates(9)]
+    right_to_left = [Board.to_coordinates(3), center, Board.to_coordinates(7)]
     [left_to_right, right_to_left]
   end
 
   def available_spaces
-    flatten.select { |entry| entry.is_a? Integer }
+    flatten.select { |entry| entry.is_a? Integer }.map { |index| Board.to_coordinates(index) }
   end
 
   def intersections

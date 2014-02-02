@@ -2,18 +2,33 @@ require 'board'
 require 'spec_helper'
 
 describe Board do
+  describe '#value_at' do
+    before do
+      @board = Board.new [['X',2,3],[4,'O',6],['this too!',8,9]]
+    end
+    it 'returns the value at the given location' do
+      expect(@board.value_at({row: 0, column: 0})).to eq 'X'
+    end
+
+    it "does't care if the value is a single character" do
+      expect(@board.value_at({row: 2, column: 0})).to eq 'this too!'
+    end
+  end
+
   describe '#available_spaces' do
     context "when no moves have been made" do
       it "returns a flat array with all board spaces" do
         board = Board.new [[1,2,3],[4,5,6],[7,8,9]]
-        expect(board.available_spaces).to eq [1,2,3,4,5,6,7,8,9]
+        expected = (1..9).map { |index| Board.to_coordinates index }
+        expect(board.available_spaces).to eq expected
       end
     end
 
     context "when some moves have been made" do
       it "returns an array of space numbers" do
         board = Board.new [[1,2,'O'],['X',5,'O'],['X',8,9]]
-        expect(board.available_spaces).to eq [1,2,5,8,9]
+        expected = [1,2,5,8,9].map { |index| Board.to_coordinates index }
+        expect(board.available_spaces).to eq expected
       end
     end
 

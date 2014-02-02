@@ -44,6 +44,9 @@ class Game
   end
 
   def impossible_to_win?
-    board.all_lines.all? { |line| line.include?(board.x_marker) && line.include?(board.o_marker) }
+    board.all_lines.all? do |line|
+      values = board.values_at line
+      values.include?(board.x_marker) && values.include?(board.o_marker)
+    end
   end
 end
