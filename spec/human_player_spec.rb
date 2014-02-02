@@ -16,7 +16,7 @@ describe HumanPlayer do
     it "marks the board according to the user's choice of move" do
       TttIO.stub(:accept_input).and_return('5')
       output = capture_stdout { @player.move }
-      expect(@game.board).to eq Board.new([[1,2,3],[4,'X',6],[7,8,9]])
+      expect(@game.board.cells).to eq [[1,2,3],[4,'X',6],[7,8,9]]
     end
   end
 end

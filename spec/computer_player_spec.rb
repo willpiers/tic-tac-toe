@@ -170,7 +170,7 @@ describe ComputerPlayer do
 
       it 'moves in the bottom right corner' do
         @player.move
-        expect(@game.board).to eq Board.new([['O',2,3],[4,5,6],[7,8,'X']])
+        expect(@game.board.cells).to eq [['O',2,3],[4,5,6],[7,8,'X']]
       end
     end
 
@@ -181,7 +181,7 @@ describe ComputerPlayer do
 
       it 'moves in the bottom left corner' do
         @player.move
-        expect(@game.board).to eq Board.new([[1,2,'O'],[4,5,6],['X',8,9]])
+        expect(@game.board.cells).to eq [[1,2,'O'],[4,5,6],['X',8,9]]
       end
     end
 
@@ -192,7 +192,7 @@ describe ComputerPlayer do
 
       it 'moves in the top right corner' do
         @player.move
-        expect(@game.board).to eq Board.new([[1,2,'X'],[4,5,6],['O',8,9]])
+        expect(@game.board.cells).to eq [[1,2,'X'],[4,5,6],['O',8,9]]
       end
     end
 
@@ -203,7 +203,7 @@ describe ComputerPlayer do
 
       it 'moves in the top left corner' do
         @player.move
-        expect(@game.board).to eq Board.new([['X',2,3],[4,5,6],[7,8,'O']])
+        expect(@game.board.cells).to eq [['X',2,3],[4,5,6],[7,8,'O']]
       end
     end
   end
@@ -219,13 +219,13 @@ describe ComputerPlayer do
     context 'when the center is available' do
       it "marks the center square" do
         @player.move
-        expect(@game.board).to eq [[1,2,3],[4,'X',6],[7,8,9]]
+        expect(@game.board.cells).to eq [[1,2,3],[4,'X',6],[7,8,9]]
       end
     end
 
     context 'when the center is marked' do
       it "returns nil" do
-        @game.board[1][1] = 'O'
+        @game.board.mark({row: 1, column: 1}, 'O')
         expect(@player.determine_move).to_not eq({row: 1, column: 1})
       end
     end
@@ -238,7 +238,7 @@ describe ComputerPlayer do
       player = ComputerPlayer.new(game, 'X')
       player.stub(:strategies).and_return([:block_fork_directly])
       player.move
-      expect(game.board).to eq Board.new [[1,'O','X'],[4,'X','O'],[7,8,9]]
+      expect(game.board.cells).to eq [[1,'O','X'],[4,'X','O'],[7,8,9]]
     end
   end
 end

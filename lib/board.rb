@@ -1,21 +1,21 @@
 require 'colorize'
 
-class Board < Array
-  attr_reader :x_marker, :o_marker, :board_size
+class Board
+  attr_reader :x_marker, :o_marker, :board_size, :cells
 
   def initialize ary, markers={}
-    super ary
+    @cells = ary
     @x_marker = markers[:x] || 'X'
     @o_marker = markers[:o] || 'O'
     @board_size = 3
   end
 
   def mark location, marker
-    self[location[:row]][location[:column]] = marker
+    cells[location[:row]][location[:column]] = marker
   end
 
   def value_at location
-    self[location[:row]][location[:column]]
+    cells[location[:row]][location[:column]]
   end
 
   def values_at locations
@@ -25,14 +25,14 @@ class Board < Array
   end
 
   def full?
-    flatten.all? { |entry| entry == x_marker || entry == o_marker }
+    cells.flatten.all? { |entry| entry == x_marker || entry == o_marker }
   end
 
   def available? location
     if location.is_a?(Hash)
-      self[location[:row]][location[:column]].is_a?(Integer)
+      cells[location[:row]][location[:column]].is_a?(Integer)
     elsif location.is_a?(Integer)
-      flatten.include?(location)
+      cells.flatten.include?(location)
     else
       false
     end
@@ -82,14 +82,16 @@ class Board < Array
   end
 
   def get_diagonals
-    center = Board.to_coordinates(5)
-    left_to_right = [Board.to_coordinates(1), center, Board.to_coordinates(9)]
-    right_to_left = [Board.to_coordinates(3), center, Board.to_coordinates(7)]
+    locations = (1..board_size**2).map { |val| Board.to_coordinates(val) }
+    left_to_right = locations.select { |spot| spot[:row] == spot[:column] }
+    right_to_left = locations.select { |spot| spot[:row] + spot[:column] == board_size - 1 }
     [left_to_right, right_to_left]
   end
 
   def available_spaces
-    flatten.select { |entry| entry.is_a? Integer }.map { |index| Board.to_coordinates(index) }
+    cells.flatten.select do |entry|
+      entry.is_a? Integer
+    end.map { |index| Board.to_coordinates(index) }
   end
 
   def intersections

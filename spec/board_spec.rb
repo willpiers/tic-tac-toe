@@ -3,7 +3,7 @@ require 'spec_helper'
 
 describe Board do
   describe '#value_at' do
-    before do
+    before(:each) do
       @board = Board.new [['X',2,3],[4,'O',6],['this too!',8,9]]
     end
     it 'returns the value at the given location' do
@@ -12,6 +12,43 @@ describe Board do
 
     it "does't care if the value is a single character" do
       expect(@board.value_at({row: 2, column: 0})).to eq 'this too!'
+    end
+  end
+
+  describe '#values_at' do
+    before(:each) do
+      @board = Board.new [['X',2,3],['O',5,6],['X',8,9]]
+    end
+
+    it 'returns an array of values' do
+      expect(@board.values_at(@board.column(0))).to eq ['X','O','X']
+    end
+
+    context 'when it receives an empty array' do
+      it "returns an empty array" do
+        expect(@board.values_at([])).to eq []
+      end
+    end
+  end
+
+  describe '#available?' do
+    before(:each) do
+      @board = Board.new [['X',2,3],['O',5,6],['X',8,9]]
+    end
+    context 'when given an empty location' do
+      it "returns something truthy" do
+        expect(@board.available?({row: 1, column: 1})).to be_true
+      end
+
+      it 'also accepts naive integer locations' do
+        expect(@board.available?(5)).to be_true
+      end
+    end
+
+    context 'when given an occupied location' do
+      it 'returns something falsy' do
+        expect(@board.available?({row: 1, column: 0})).to be_false
+      end
     end
   end
 

@@ -13,7 +13,7 @@ describe Game do
   describe '#initialize' do
     it "sets up the board_matrix" do
       starting_matrix = [[1,2,3],[4,5,6],[7,8,9]]
-      expect(Game.new.board).to eq starting_matrix
+      expect(Game.new.board.cells).to eq starting_matrix
     end
   end
 

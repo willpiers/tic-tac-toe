@@ -53,7 +53,7 @@ class TttIO
   def self.clear_screen; system 'clear'; end
 
   def self.color_board board
-    board.flatten.map do |entry|
+    board.cells.flatten.map do |entry|
       case entry
       when board.x_marker then entry.colorize(:blue)
       when board.o_marker then entry.colorize(:red)
